@@ -1,5 +1,7 @@
 Python interface needs to be installed using the XDA wheel file.
 Make sure to have the correct version of python and pip installed on your machine.
+WIndows wheel files come with the MTSDK Windows download: MTw Awnida from
+https://www.movella.com/support/software-documentation
 
 1. Make sure to have "wheel" installed on your machine:
 
