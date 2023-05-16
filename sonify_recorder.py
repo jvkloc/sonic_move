@@ -42,7 +42,7 @@ def sonify_main():
                 print(port.portName() + f' with baud rate {port.baudrate()} Bd and device id {port.deviceId()}')
         else:
             raise RuntimeError('SystemExit: No devices found.')
-        # get the Awinda2 Dongles connected to the ports or exit if the devices are of another type
+        # get the Awinda Dongles connected to the ports or exit if the devices are of another type
         dngl_ports = []
         print('\nChecking the type of the connected Xsens devices...')
         for port in port_info:
@@ -51,13 +51,13 @@ def sonify_main():
                 print('Device ' + str(port.deviceId()) + ' is of type AW-DNG2')
         if len(dngl_ports) == 0:
             raise RuntimeError('No AW-DNG2 devices found. Aborting.')
-        # open the ports of the Awinda2 Dongles (assuming only one device in one port)
+        # open the ports of the Awinda Dongles (assuming only one device in one port)
         devices = []
         print('\nOpening the ports of the Xsens devices...')
         for port in dngl_ports: 
             if not control.openPort(port.portName(), port.baudrate()):
                 raise RuntimeError('RuntimeError: Aborting.')    
-            # use the Awinda2 Dongle ids to initialise contol object devices and notify the user
+            # use the Awinda Dongle ids to initialise contol object devices and notify the user
             devices.append(control.device(port.deviceId()))
             print('Port ' + port.portName() + f' for AW-DNG2 {port.deviceId().toXsString()} opened')
         # implement recording 
@@ -88,8 +88,8 @@ def sonify_main():
             #print(f'\nSupported update rates for AW-DNG2 {device.deviceId()}: {rates}')
             #selected_rate = int(input(f'Select one of the supported update rates for AW-DNG2 {device.deviceId()}: '))
             #radio_chnl = int(input(f'Select one of the available radio channels AW-DNG2 {device.deviceId()}: '))
-            selected_rate = 100 # hardcoded for Minimi's Biodata Sonate project
-            radio_chnl = 11 # hardcoded for Minimi's Biodata Sonate project
+            selected_rate = 100 # hardcoded for Minimi's Biodata Sonate
+            radio_chnl = 11 # hardcoded for Minimi's Biodata Sonate
             if selected_rate in update_rates:
                 device.setUpdateRate(selected_rate)
             else:
