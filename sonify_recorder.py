@@ -1,5 +1,4 @@
 # program code for reading live Awinda MTw2 sensors through Awinda2 USB Dongle
-# code must be modified if using multiple Dongles
 import xsensdeviceapi as xda # documentation provided with SDK download
 import XdaCallback as xc
 import sonify_functions as sf
