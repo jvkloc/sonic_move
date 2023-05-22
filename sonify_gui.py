@@ -4,7 +4,9 @@ import sonify_functions as sf
 from sonify_recorder import start, stop
 # create context and viewport
 dpg.create_context()
-dpg.create_viewport(title='Sonify dashboard', height=1000, width=1900)
+dpg.create_viewport(title='Sonify dashboard')
+# get viewport width
+vp_width = dpg.get_viewport_width()
 # set dancer window labels and positions
 wndw_lbl = ['one', 'two', 'three']
 wndw_pos = [(45,170), (25,190), (5,210)]
@@ -15,12 +17,12 @@ width = 100
 # set height of sensor data plots
 height = 350
 # create sensor status display window
-with dpg.window(label='Recording control panel', pos=(25,0), width=1850):
+with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width):
     # create buttons for recording
     dpg.add_button(label='Start recording', callback=start)
     dpg.add_button(label='Stop recording', callback=stop)    
 # create sensor status display window
-with dpg.window(label='MTw2 sensor status panel', pos=(25,85), width=1850):
+with dpg.window(label='MTw2 sensor status panel', pos=(25,85), width=vp_width):
     with dpg.table(header_row=False):
         for i in range(9):
             dpg.add_table_column()
@@ -33,7 +35,7 @@ with dpg.window(label='MTw2 sensor status panel', pos=(25,85), width=1850):
                 dpg.set_value(f'sensor_{i}', 'No signal')   
 # create window for sensors of each dancer
 for w in range(3):
-    with dpg.window(label=f'Dancer {wndw_lbl[w]}', pos=wndw_pos[w], width=1850, collapsed=True):
+    with dpg.window(label=f'Dancer {wndw_lbl[w]}', pos=wndw_pos[w], width=vp_width, collapsed=True):
         with dpg.table(header_row=False):
             # three columns and two rows for six data types of each sensor
             for _ in range(3):
@@ -136,6 +138,7 @@ for w in range(3):
                         dpg.set_axis_limits(item, 0, 2)
 # run the GUI
 dpg.setup_dearpygui()
+dpg.maximize_viewport()
 dpg.show_viewport()
 dpg.start_dearpygui()
 dpg.destroy_context()
