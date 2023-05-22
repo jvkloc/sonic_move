@@ -10,6 +10,13 @@ import threading
 import logging
 import time
 import sys
+# ####################################################################################################################
+# set these filepaths or remove log file / output txt file from the code
+log_path = '' # lines 136-140
+file_out_path = '' # lines 237-240 
+# variable data_out (lines 163-164) used in the loop beginning from line 168 becomes unnecessary 
+# if you don't use output txt file
+# ####################################################################################################################
 # global variable for stopping recording
 stop_rec = False
 # dpg callback for starting recording
@@ -130,7 +137,7 @@ def sonify_main():
                     print(f'MTw2 {mtw.deviceId()} connected to AW-DNG2 {device.deviceId()} set to measurement mode')
             # create log file
             print('\n' + f'Creating a log file for AW-DNG2 {device.deviceId()} and starting recording...')
-            log = f'/home/jvkloc/Downloads/{device.deviceId()}_log.mtb'
+            log = f'{log_path}/{device.deviceId()}_log.mtb'
             if device.createLogFile(log) != xda.XRV_OK:
                 raise RuntimeError(f'Failed to create a log file for AW-DNG2 {device.deviceId()}. Aborting.')            
             # start recording
@@ -230,7 +237,7 @@ def sonify_main():
         # set measurement status of MTw2 sensors to 'Finished'
         sf.status(mtw2s, finished=True)
         # create a text file for the data and save it
-        export_file = '/home/jvkloc/Downloads/file_out.txt'
+        export_file = f'{file_out_path}/file_out.txt'
         with open(export_file, 'w') as file:
             file.write(data_out)   
         # stop recording and close all devices
