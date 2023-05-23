@@ -11,11 +11,11 @@ import threading
 import logging
 import time
 import sys
-# #####################################################################################################
-# set filepath for log file, end it with / or \ or whatever character your operating system uses
-log_path = ''
+# #####################################################
+# set filepath for log file
+log_path = '/home/jvkloc/Downloads/'
 # variables for total acceleration timeout on lines 171-173
-# #####################################################################################################
+# #####################################################
 # variable for stopping recording
 stop_rec = False
 # dpg callback for starting recording
