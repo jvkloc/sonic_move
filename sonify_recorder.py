@@ -11,11 +11,8 @@ import logging
 import time
 import sys
 # ####################################################################################################################
-# set these filepaths or remove log file / output txt file from the code
+# set filepath or remove log file from the code
 log_path = '' # lines 136-140
-file_out_path = '' # lines 237-240 
-# variable data_out (lines 163-164) used in the loop beginning from line 168 becomes unnecessary 
-# if you don't use output txt file
 # ####################################################################################################################
 # global variable for stopping recording
 stop_rec = False
@@ -160,8 +157,6 @@ def sonify_main():
         osc_method('/test/*', sf.handler)
         # create osc4py3 client: ip, port, name
         osc_udp_client('127.0.0.1', 50005, 'OSC_client') 
-        # variable for text file output of the MTw2 sensor data
-        data_out = '' 
         # save MTw2 sensor ids to data normaliser dictionary
         sf.set_sensor_ids(mtw2_ids)
         print('Use dashboard "stop recording" button to stop\n')
@@ -222,10 +217,7 @@ def sonify_main():
                     # send Euler angles data to dashboard plot
                     sf.send_data(mtw2_id, mtw2_ids, 'ori', euler_value)                   
                 # append MTw2 id to the message
-                osc_msg.append(mtw2_id)
-                # save data packet values for output text file and change line for data in the next packet
-                for value in osc_msg:
-                    data_out += ':'.join(f'{value}') + '\n'               
+                osc_msg.append(mtw2_id)              
                 # send data from the data packet to Open Sound Control environment
                 message = oscbuildparse.OSCMessage('/test/*', None, osc_msg)
                 osc_send(message, 'OSC_client')
@@ -235,11 +227,7 @@ def sonify_main():
         # uninstall the osc4py3 tools
         osc_terminate()
         # set measurement status of MTw2 sensors to 'Finished'
-        sf.status(mtw2s, finished=True)
-        # create a text file for the data and save it
-        export_file = f'{file_out_path}/file_out.txt'
-        with open(export_file, 'w') as file:
-            file.write(data_out)   
+        sf.status(mtw2s, finished=True)  
         # stop recording and close all devices
         for device in devices:
             print(f'Closing AW-DNG2 {device.deviceId()}...')    
