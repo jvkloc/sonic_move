@@ -2,6 +2,7 @@
 import xsensdeviceapi as xda # documentation provided with SDK download
 import XdaCallback as xc
 import sonify_functions as sf
+import dearpygui.dearpygui as dpg
 from osc4py3 import oscmethod as osm # https://osc4py3.readthedocs.io/en/latest/
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
@@ -13,7 +14,7 @@ import sys
 # #####################################################
 # set filepath for log file
 log_path = ''
-# variables for total acceleration timeout on lines 164-167
+# variables for total acceleration timeout on lines 171-173
 # #####################################################
 # variable for stopping recording
 stop_rec = False
@@ -26,6 +27,12 @@ def start(sender, app_data):
 def stop(sender, app_data):
     global stop_rec
     stop_rec = True
+# variable for total acceleration threshold
+acc_treshold = 30 # m/s**2
+# function for setting the total acceleration threshold
+def set_threshold(sender, data):
+    global acc_threshold 
+    acc_threshold = dpg.get_value(sender)
 # main script   
 def sonify_main():
     # create a Xsens device management object and print API version info to the user
@@ -163,8 +170,7 @@ def sonify_main():
         print('Use dashboard "stop recording" button to stop\n')
         # variables for total acceleration timeout
         count_from = 0 # 
-        timeout = 0.2 # seconds
-        acc_treshold = 20 # m/s**2        
+        timeout = 0.2 # seconds        
         while not stop_rec: 
             # message variable for sending MTw2 sensor data to Open Sound Control environment
             osc_msg = []
