@@ -10,11 +10,12 @@ import threading
 import logging
 import time
 import sys
-# ####################################################################################################################
-# set filepath or remove log file from the code
-log_path = '' # lines 136-140
-# ####################################################################################################################
-# global variable for stopping recording
+# #####################################################
+# set filepath for log file
+log_path = ''
+# variables for total acceleration timeout on lines 164-167
+# #####################################################
+# variable for stopping recording
 stop_rec = False
 # dpg callback for starting recording
 def start(sender, app_data):
@@ -91,8 +92,8 @@ def sonify_main():
             #print(f'\nSupported update rates for AW-DNG2 {device.deviceId()}: {rates}')
             #selected_rate = int(input(f'Select one of the supported update rates for AW-DNG2 {device.deviceId()}: '))
             #radio_chnl = int(input(f'Select one of the available radio channels AW-DNG2 {device.deviceId()}: '))
-            selected_rate = 100 # hardcoded for Minimi's Biodata Sonate
-            radio_chnl = 11 # hardcoded for Minimi's Biodata Sonate
+            selected_rate = 100 # hardcoded for Minimi's Biodata Sonate project
+            radio_chnl = 11 # hardcoded for Minimi's Biodata Sonate project
             if selected_rate in update_rates:
                 device.setUpdateRate(selected_rate)
             else:
@@ -136,7 +137,7 @@ def sonify_main():
             print('\n' + f'Creating a log file for AW-DNG2 {device.deviceId()} and starting recording...')
             log = f'{log_path}/{device.deviceId()}_log.mtb'
             if device.createLogFile(log) != xda.XRV_OK:
-                raise RuntimeError(f'Failed to create a log file for AW-DNG2 {device.deviceId()}. Aborting.')            
+                raise RuntimeError(f'Failed to create a log file for AW-DNG2 {device.deviceId()}. Aborting.')
             # start recording
             try:
                 device.startRecording() 
@@ -160,6 +161,10 @@ def sonify_main():
         # save MTw2 sensor ids to data normaliser dictionary
         sf.set_sensor_ids(mtw2_ids)
         print('Use dashboard "stop recording" button to stop\n')
+        # variables for total acceleration timeout
+        count_from = 0 # 
+        timeout = 0.2 # seconds
+        acc_treshold = 20 # m/s**2        
         while not stop_rec: 
             # message variable for sending MTw2 sensor data to Open Sound Control environment
             osc_msg = []
@@ -169,26 +174,33 @@ def sonify_main():
                 packet = callback.getNextPacket()
                 # check if MTw2 id from which the packet is is available
                 if packet.containsStoredDeviceId():
-                    # save MTw2 id for Open Sound Control message
+                    # append MTw2 id for Open Sound Control message
                     mtw2_id = f'{packet.deviceId()}'   
                 # check for calibrated data
                 if packet.containsCalibratedData():
                     # get acceleration data 
                     acc = packet.calibratedAcceleration()
                     acc_value = sf.normalise(mtw2_id, 'acc', [acc[0], acc[1], acc[2]])
-                    # get velocity as Euclidean norm of acceleration
-                    vel_value = sf.normalise(mtw2_id, 'vel', [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2)])                
-                    # append acceleration and velocity data to Open Sound Control message
-                    osc_msg.append(acc_value)
-                    osc_msg.append(vel_value)
-                    # send acceleration and velocity  data to dashboard plot
-                    try:
-                        sf.send_data(mtw2_id, mtw2_ids, 'acc', acc_value) 
-                        sf.send_data(mtw2_id, mtw2_ids, 'vel', vel_value)     
+                    # get total acceleration as Euclidean norm of acceleration
+                    #tot_a_value = sf.normalise(mtw2_id, 'tot_a', [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2)]) 
+                    # set total acceleration to 1 or 0 with chosen threshold and timeout
+                    try: 
+                        if sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2) > acc_treshold and time.time() - count_from > timeout:
+                            tot_a_value = [1]
+                            # set new time to count timeout from
+                            count_from= time.time()
+                        elif sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2) <= acc_treshold:
+                            tot_a_value = [0]
                     except Exception as e:
                         print(e)
-                        print('send')
-                        sys.exit(1)                    
+                        print('timeout')
+                        sys.exit(1)
+                    # append acceleration data to Open Sound Control message
+                    osc_msg.append(acc_value)
+                    osc_msg.append(tot_a_value)
+                    # send acceleration data to dashboard plot
+                    sf.send_data(mtw2_id, mtw2_ids, 'acc', acc_value) 
+                    sf.send_data(mtw2_id, mtw2_ids, 'tot_a', tot_a_value)     
                     # get gyroscope data
                     gyr = packet.calibratedGyroscopeData() 
                     gyr_value = sf.normalise(mtw2_id, 'gyr', [gyr[0], gyr[1], gyr[2]])                   
@@ -217,7 +229,7 @@ def sonify_main():
                     # send Euler angles data to dashboard plot
                     sf.send_data(mtw2_id, mtw2_ids, 'ori', euler_value)                   
                 # append MTw2 id to the message
-                osc_msg.append(mtw2_id)              
+                osc_msg.append(mtw2_id)             
                 # send data from the data packet to Open Sound Control environment
                 message = oscbuildparse.OSCMessage('/test/*', None, osc_msg)
                 osc_send(message, 'OSC_client')
@@ -227,7 +239,7 @@ def sonify_main():
         # uninstall the osc4py3 tools
         osc_terminate()
         # set measurement status of MTw2 sensors to 'Finished'
-        sf.status(mtw2s, finished=True)  
+        sf.status(mtw2s, finished=True) 
         # stop recording and close all devices
         for device in devices:
             print(f'Closing AW-DNG2 {device.deviceId()}...')    
@@ -252,7 +264,6 @@ def sonify_main():
             # disable radio
             device.disableRadio()
             print(f'AW-DNG2 {device.deviceId()} radio disabled')
-            print(f'\nData from the recording was written to {export_file}')
             print('\nAll devices closed. Closing the ports...')
         # close all ports
         for port in dngl_ports:
