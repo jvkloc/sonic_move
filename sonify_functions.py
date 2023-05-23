@@ -66,7 +66,7 @@ def send_data(sensor_id, mtw2_ids, data_type, value):
             # dancer one, sensor one, two, three -> dancer two, sensor one, two, three -> dance three, sensor one, two, three
             k = floor(i/3)
             s = i - 3*k + 1
-            # set xyz-coordinate data to corresponding data plot
+            # set xyz-coordinate data to data plot
             if data_type in ['acc', 'gyr', 'mag']:
                 for i in range(len(value)):
                     dancers[k][f'snsr_{s}'][f'{data_type}_{coord[i]}'].append(value[i])
