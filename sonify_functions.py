@@ -2,15 +2,15 @@
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 from math import floor
 # labels for setting MTw2 ids to dashboard
-labels = [ ['acc','Acceleration'], ['vel', 'Velocity'], ['ori', 'Orientation'], 
+labels = [ ['acc','Acceleration'], ['tot_a', 'Total Acceleration'], ['ori', 'Orientation'], 
                 ['gyr', 'Gyroscope'], ['rot', 'Rate of Turn'], ['mag', 'Magnetometer'] ]
 # sensor max and min values for data normalisation, 'key':[x, y, z] or 'key':[p, r, y] for Euler angles
 sensors = []
 for i in range(9):
     sensors.append({'id': None, 'acc_min':[0, 0, 0], 'gyr_min':[0, 0, 0], 'mag_min':[0, 0, 0], 
-                                 'ori_min':[0, 0, 0], 'vel_min':[0], 'rot_min':[0],
+                                 'ori_min':[0, 0, 0], 'tot_a_min':[0], 'rot_min':[0],
                                  'acc_max':[1, 1, 1], 'gyr_max':[1, 1, 1], 'mag_max':[1, 1, 1], 
-                                 'ori_max':[1, 1, 1], 'vel_max':[1], 'rot_max':[1]})
+                                 'ori_max':[1, 1, 1], 'tot_a_max':[1], 'rot_max':[1]})
 # initialise y-axes data for data plots
 dancer_1, dancer_2, dancer_3, snsr_1, snsr_2, snsr_3 = {}, {}, {}, {}, {}, {}
 dancers = [dancer_1, dancer_2, dancer_3]
@@ -23,7 +23,7 @@ coord = ['x', 'y', 'z']
 for i in range(3):   
     # initialise velocity, rate of turn and euler angles data for each dancer's each sensor
     for j in range(3):
-        dancers[i][f'snsr_{j+1}']['vel'] = [0]*500
+        dancers[i][f'snsr_{j+1}']['tot_a'] = [0]*500
         dancers[i][f'snsr_{j+1}']['rot'] = [0]*500
         dancers[i][f'snsr_{j+1}']['ori_p'] = [0]*500
         dancers[i][f'snsr_{j+1}']['ori_r'] = [0]*500
@@ -83,11 +83,11 @@ def send_data(sensor_id, mtw2_ids, data_type, value):
                         del dancers[k][f'snsr_{s}'][f'{data_type}_{char}'][0]
                     dpg.configure_item(f'{data_type}{k}_{s}{char}', y=dancers[k][f'snsr_{s}'][f'{data_type}_{char}'])
             # set one dimensional data to data plot
-            elif data_type in ['rot', 'vel']:
+            elif data_type in ['rot', 'tot_a']:
                 dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
                 while len(dancers[k][f'snsr_{s}'][f'{data_type}']) > 500:
                     del dancers[k][f'snsr_{s}'][f'{data_type}'][0]                  
-                dpg.configure_item(f'{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'{data_type}'])
+                dpg.configure_item(f'{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'{data_type}'])           
 # function for checking and setting the measurement status of the sensors
 def status(mtw2s, ids=False, finished=False):
     for i in range(len(mtw2s)):
