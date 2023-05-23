@@ -1,7 +1,7 @@
 # Sonify Dear PyGUI dashboard program code
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 import sonify_functions as sf
-from sonify_recorder import start, stop
+from sonify_recorder import start, stop, set_threshold
 # create context and viewport
 dpg.create_context()
 vp = dpg.create_viewport(title='Sonify dashboard')
@@ -52,15 +52,15 @@ for w in range(3):
                         # create y axis for acceleration in x axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='x acceleration')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['acc_x'], label='x', tag=f'acc{w}_{i+1}x', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in y axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='y acceleration')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['acc_y'], label='y', tag=f'acc{w}_{i+1}y', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in z axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='z acceleration')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['acc_z'], label='z', tag=f'acc{w}_{i+1}z', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                     # create plot for velocity
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_tot_a', label='Waiting for id...', height=height):
                         # create legend
@@ -70,7 +70,8 @@ for w in range(3):
                         # create y axis for velocity
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='Total Acceleration')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['tot_a'], label='tot_a', tag=f'tot_a{w}_{i+1}', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 50)
+                        dpg.add_drag_line(default_value=30, vertical=False, label="threshold", color=[255, 0, 0, 255], callback=set_threshold)
                     # create plot for orientation data
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_ori', label='Waiting for id...', height=height):
                         # create legend
@@ -80,15 +81,15 @@ for w in range(3):
                         # create y axis for acceleration in x axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='x orientation')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['ori_p'], label='pitch', tag=f'ori{w}_{i+1}p', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in y axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='y orientation')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['ori_r'], label='roll', tag=f'ori{w}_{i+1}r', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in z axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='z orientation')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['ori_y'], label='yaw', tag=f'ori{w}_{i+1}y', parent=dpg.last_item()) 
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                 with dpg.table_row():
                     # create plot for gyroscope data
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_gyr', label='Waiting for id...', height=height):
@@ -99,15 +100,15 @@ for w in range(3):
                         # create y axis for acceleration in x axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='x gyroscope')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['gyr_x'], label='x', tag=f'gyr{w}_{i+1}x', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in y axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='y gyroscope')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['gyr_y'], label='y', tag=f'gyr{w}_{i+1}y', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in z axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='z gyroscope')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['gyr_z'], label='z', tag=f'gyr{w}_{i+1}z', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                     # create plot for rate of turn data
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_rot', label='Waiting for id...', height=height):
                         # create legend
@@ -117,7 +118,7 @@ for w in range(3):
                         # create y axis for velocity
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='Rate of Turn')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['rot'], label='RoT', tag=f'rot{w}_{i+1}', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                     # create plot for magnetomter data
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_mag', label='Waiting for id...', height=height):
                         # create legend
@@ -127,15 +128,15 @@ for w in range(3):
                         # create y axis for acceleration in x axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='x magnetometer')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['mag_x'], label='x', tag=f'mag{w}_{i+1}x', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in y axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='y magnetometer')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['mag_z'], label='y', tag=f'mag{w}_{i+1}y', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
                         # create y axis for acceleration in z axis direction
                         item = dpg.add_plot_axis(dpg.mvYAxis, label='z magnetometer')
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['mag_z'], label='z', tag=f'mag{w}_{i+1}z', parent=dpg.last_item())
-                        dpg.set_axis_limits(item, 0, 2)
+                        dpg.set_axis_limits(item, 0, 1)
 # run the GUI
 dpg.setup_dearpygui()
 dpg.maximize_viewport()
