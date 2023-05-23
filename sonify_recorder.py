@@ -11,11 +11,11 @@ import threading
 import logging
 import time
 import sys
-# #####################################################
-# set filepath for log file
+# #####################################################################################################
+# set filepath for log file, end it with / or \ or whatever character your operating system uses
 log_path = ''
 # variables for total acceleration timeout on lines 171-173
-# #####################################################
+# #####################################################################################################
 # variable for stopping recording
 stop_rec = False
 # dpg callback for starting recording
@@ -142,7 +142,7 @@ def sonify_main():
                     print(f'MTw2 {mtw.deviceId()} connected to AW-DNG2 {device.deviceId()} set to measurement mode')
             # create log file
             print('\n' + f'Creating a log file for AW-DNG2 {device.deviceId()} and starting recording...')
-            log = f'{log_path}/{device.deviceId()}_log.mtb'
+            log = f'{log_path}{device.deviceId()}_log.mtb'
             if device.createLogFile(log) != xda.XRV_OK:
                 raise RuntimeError(f'Failed to create a log file for AW-DNG2 {device.deviceId()}. Aborting.')
             # start recording
