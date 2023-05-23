@@ -4,12 +4,12 @@ import sonify_functions as sf
 from sonify_recorder import start, stop
 # create context and viewport
 dpg.create_context()
-dpg.create_viewport(title='Sonify dashboard')
+vp = dpg.create_viewport(title='Sonify dashboard')
 # get viewport width
-vp_width = dpg.get_viewport_width()
+vp_width = dpg.get_viewport_width() 
 # set dancer window labels and positions
 wndw_lbl = ['one', 'two', 'three']
-wndw_pos = [(45,170), (25,190), (5,210)]
+wndw_pos = [(45,200), (25,220), (5,240)]
 # set x axis to five seconds (100 Hz = 100 packets per second)
 x_axis = list(range(500))
 # set sensor status text field width
@@ -17,12 +17,12 @@ width = 100
 # set height of sensor data plots
 height = 350
 # create sensor status display window
-with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width):
+with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width): 
     # create buttons for recording
     dpg.add_button(label='Start recording', callback=start)
     dpg.add_button(label='Stop recording', callback=stop)    
 # create sensor status display window
-with dpg.window(label='MTw2 sensor status panel', pos=(25,85), width=vp_width):
+with dpg.window(label='MTw2 sensor status panel', pos=(25,100), width=vp_width): 
     with dpg.table(header_row=False):
         for i in range(9):
             dpg.add_table_column()
@@ -62,14 +62,14 @@ for w in range(3):
                         dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['acc_z'], label='z', tag=f'acc{w}_{i+1}z', parent=dpg.last_item())
                         dpg.set_axis_limits(item, 0, 2)
                     # create plot for velocity
-                    with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_vel', label='Waiting for id...', height=height):
+                    with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_tot_a', label='Waiting for id...', height=height):
                         # create legend
                         dpg.add_plot_legend()    
                         # create x axis
                         dpg.add_plot_axis(dpg.mvXAxis, label='x')
                         # create y axis for velocity
-                        item = dpg.add_plot_axis(dpg.mvYAxis, label='Velocity')
-                        dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['vel'], label='vel', tag=f'vel{w}_{i+1}', parent=dpg.last_item())
+                        item = dpg.add_plot_axis(dpg.mvYAxis, label='Total Acceleration')
+                        dpg.add_line_series(x_axis, sf.dancers[w][f'snsr_{i+1}']['tot_a'], label='tot_a', tag=f'tot_a{w}_{i+1}', parent=dpg.last_item())
                         dpg.set_axis_limits(item, 0, 2)
                     # create plot for orientation data
                     with dpg.plot(tag=f'dncr{w+1}_mtw2{i+1}_ori', label='Waiting for id...', height=height):
