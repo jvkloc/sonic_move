@@ -1,4 +1,4 @@
-# Sonify Dear PyGUI dashboard program code
+# Sonic Move Dear PyGUI dashboard with four sensors in each row 
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 import sonify_functions as sf
 from sonify_recorder import start, stop, set_threshold
@@ -14,7 +14,7 @@ wndw_pos = [(45,300), (25,320), (5,340)]
 x_axis = list(range(500))
 # set sensor status text field width
 width = 100
-# create sensor status display window
+# create program status display window
 with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width-215): 
     # create buttons for recording
     dpg.add_button(label='Start recording', callback=start)
