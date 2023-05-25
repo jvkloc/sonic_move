@@ -12,9 +12,9 @@ import logging
 import time
 import sys
 # #####################################################
-# set filepath for log file: see line 166
+# set filepath for log file: see line 167
 log_path = ''
-# variables for total acceleration timeout on lines 196-198
+# variables for total acceleration timeout on lines 193-195
 # #####################################################
 # variable for stopping recording
 stop_rec = False
@@ -145,7 +145,7 @@ def sonify_main():
                 config_array = xda.XsOutputConfigurationArray()
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_PacketCounter, 0))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_SampleTimeFine, 0)) 
-                config_array.push_back(xda.XsOutputConfiguration(xda.XDI_CoordSysEnu, 0xFFFF))
+                #config_array.push_back(xda.XsOutputConfiguration(xda.XDI_CoordSysEnu, 0xFFFF))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_Acceleration, 0xFFFF))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_EulerAngles, 0xFFFF))
                 # set the array to the MTw2
