@@ -13,7 +13,7 @@ import time
 import sys
 # #####################################################
 # set filepath for log file: see line 166
-log_path = '/home/jvkloc/Downloads/'
+log_path = ''
 # variables for total acceleration timeout on lines 196-198
 # #####################################################
 # variable for stopping recording
@@ -198,17 +198,12 @@ def sonify_main():
         locations = ['left', 'right', 'middle']
         # place MTw2 sensors in order dancer one, left, right, middle and similarly for dancers two and three
         for i in range(len(mtw2_ids)): 
-            # second value is for Open Sound Control Message
+            # second value is for Open Sound Control Message, lines 218-219
             mtw2_locations[mtw2_ids[i]] = [f'Dancer {floor(i/3)+1} {locations[i-floor(i/3)*3]}', f'{floor(i/3)+1}{i+1-floor(i/3)*3}']    
         # set MTw2 sensor status on the dashboard
         sf.status(mtw2s, mtw2_locations, ids=True)
         # set MTw2 sensor ids to dashboard plots and normalisation dictionary
-        try:
-            sf.set_sensor_ids(mtw2_ids, mtw2_locations)        
-        except Exception as e:
-            print(e)
-            print('sensor labels')
-            sys.exit(1)
+        sf.set_sensor_ids(mtw2_ids, mtw2_locations) 
         while not stop_rec: 
             # message variable for sending MTw2 sensor data to Open Sound Control environment
             osc_msg = []
@@ -219,7 +214,9 @@ def sonify_main():
                 # check if MTw2 id from which the packet is is available
                 if packet.containsStoredDeviceId():
                     # append MTw2 id for Open Sound Control message
-                    mtw2_id = f'{packet.deviceId()}'   
+                    mtw2_id = f'{packet.deviceId()}' 
+                    # xy where x is dancer number and y is 1 for left, 2 for right and 3 for middle
+                    osc_msg.append(mtw2_locations[mtw2_id][1]) 
                 # check for calibrated data
                 if packet.containsCalibratedData():
                     # get acceleration data 
@@ -268,9 +265,7 @@ def sonify_main():
                     # append Euler angles data to Open Sound Control message
                     osc_msg.append(euler_value)                 
                     # send Euler angles data to dashboard plot
-                    sf.send_data(mtw2_id, mtw2_ids, 'ori', euler_value)                   
-                # append MTw2 id to the message
-                osc_msg.append(mtw2_locations[mtw2_id][1])             
+                    sf.send_data(mtw2_id, mtw2_ids, 'ori', euler_value)                               
                 # send data from the data packet to Open Sound Control environment
                 message = oscbuildparse.OSCMessage('/test/*', None, osc_msg)
                 osc_send(message, 'OSC_client')
