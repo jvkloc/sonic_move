@@ -1,4 +1,4 @@
-# Sonic Move Dear PyGUI dashboard with four sensors in each row 
+# Sonic Move Dear PyGUI dashboard program code for displaying four sensors in a row
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 import sonify_functions as sf
 from sonify_recorder import start, stop, set_threshold
@@ -12,8 +12,6 @@ wndw_lbl = ['one', 'two', 'three']
 wndw_pos = [(45,300), (25,320), (5,340)]
 # set x axis to five seconds (100 Hz = 100 packets per second)
 x_axis = list(range(500))
-# set sensor status text field width
-width = 100
 # create program status display window
 with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width-215): 
     # create buttons for recording
@@ -27,11 +25,10 @@ with dpg.window(label='MTw2 sensor status panel', pos=(25,195), width=vp_width-2
             dpg.add_table_column()
         with dpg.table_row():
             for i in range(9):
-                dpg.add_text(f'Waiting for id', tag=f'mtw2{i}')
+                dpg.add_text('Waiting for id', tag=f'mtw2{i}')
         with dpg.table_row():
             for i in range(9):
-                dpg.add_input_text(tag=f'sensor_{i}', width=width) 
-                dpg.set_value(f'sensor_{i}', 'No signal')   
+                dpg.add_text( 'No signal', tag=f'sensor_{i}') 
 # create window for sensors of each dancer
 for w in range(3):
     with dpg.window(label=f'Dancer {wndw_lbl[w]}', pos=wndw_pos[w], width=vp_width, collapsed=True):
