@@ -8,13 +8,13 @@ class XdaCallback(xda.XsCallback):
         self.m_maxNumberOfPacketsInBuffer = max_buffer_size
         self.m_packetBuffer = list()
         self.m_lock = Lock()
-    # method for checking if there is a data packet available
+    # check if there is a data packet available
     def packetAvailable(self):
         self.m_lock.acquire()
         res = len(self.m_packetBuffer) > 0
         self.m_lock.release()
         return res
-    # method for getting the next data packet
+    # get the next data packet
     def getNextPacket(self):
         self.m_lock.acquire()
         if len(self.m_packetBuffer) > 0:
