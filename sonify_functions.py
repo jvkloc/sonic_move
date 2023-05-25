@@ -1,4 +1,4 @@
-# functions for sonify_gui.py and sonify_recorder.py
+# functions for sonify_gui.py, four_columns_gui.py and sonify_recorder.py
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 from math import floor
 # labels for setting MTw2 ids to dashboard
