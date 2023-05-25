@@ -1,4 +1,4 @@
-# functions for sonify_gui.py and sonify_recorde.py
+# functions for sonify_gui.py and sonify_recorder.py
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 from math import floor
 # labels for setting MTw2 ids to dashboard
@@ -24,6 +24,7 @@ for i in range(3):
     # initialise velocity, rate of turn and euler angles data for each dancer's each sensor
     for j in range(3):
         dancers[i][f'snsr_{j+1}']['tot_a'] = [0]*500
+        dancers[i][f'snsr_{j+1}']['bin_tot_a'] = [0]*500
         dancers[i][f'snsr_{j+1}']['rot'] = [0]*500
         dancers[i][f'snsr_{j+1}']['ori_p'] = [0]*500
         dancers[i][f'snsr_{j+1}']['ori_r'] = [0]*500
@@ -35,14 +36,17 @@ for i in range(3):
 # handler function for sending osc4py3 messages
 def handler(acc ,vel, gyr, rot, mag, ori, mtw2_id):
     print(acc ,vel, gyr, rot, mag, ori, mtw2_id)                
-# function for setting the sensor ids to dashboard
-def set_sensor_ids(sensor_ids):
+# function for setting the sensor ids to dashboard and to the normalisation dictionary
+def set_sensor_ids(sensor_ids, sensor_locations):
     for i in range(len(sensor_ids)): 
         w = floor(i/3)
         k = i - 3*w + 1
+        # set sensor ids to sensors dictionary
         sensors[i]['id'] = sensor_ids[i]
+        # set dashboard plot labels
         for j in range(6):
-            dpg.configure_item(f'dncr{w+1}_mtw2{k}_{labels[j][0]}', label=f'MTw2 {sensor_ids[i]} {labels[j][1]}') 
+            #dpg.configure_item(f'dncr{w+1}_mtw2{k}_{labels[j][0]}', label=f'MTw2 {sensor_ids[i]} {labels[j][1]}') 
+            dpg.configure_item(f'dncr{w+1}_mtw2{k}_{labels[j][0]}', label=f'{sensor_locations[sensor_ids[i]][0]} {labels[j][1]}')
 # function for normalising sensor data
 def normalise(sensor_id, data_type, value):
     normalised_data = []
@@ -76,23 +80,33 @@ def send_data(sensor_id, mtw2_ids, data_type, value):
             # set Euler angles data to data plot
             elif data_type == 'ori':
                 dancers[k][f'snsr_{s}'][f'{data_type}_p'].append(value[0])  
-                dancers[k][f'snsr_{s}'][f'{data_type}_r'].append(value[0])
-                dancers[k][f'snsr_{s}'][f'{data_type}_y'].append(value[0])
+                dancers[k][f'snsr_{s}'][f'{data_type}_r'].append(value[1])
+                dancers[k][f'snsr_{s}'][f'{data_type}_y'].append(value[2])
                 for char in ['p', 'y', 'r']:
                     while len(dancers[k][f'snsr_{s}'][f'{data_type}_{char}']) > 500:
                         del dancers[k][f'snsr_{s}'][f'{data_type}_{char}'][0]
                     dpg.configure_item(f'{data_type}{k}_{s}{char}', y=dancers[k][f'snsr_{s}'][f'{data_type}_{char}'])
-            # set one dimensional data to data plot
-            elif data_type in ['rot', 'tot_a']:
+            # set rate of turn data to data plot
+            elif data_type == 'rot':
                 dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
                 while len(dancers[k][f'snsr_{s}'][f'{data_type}']) > 500:
                     del dancers[k][f'snsr_{s}'][f'{data_type}'][0]                  
-                dpg.configure_item(f'{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'{data_type}'])           
+                dpg.configure_item(f'{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'{data_type}'])
+            # set total acceleration data to data plot
+            elif data_type == 'tot_a':
+                dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
+                dancers[k][f'snsr_{s}'][f'bin_{data_type}'].append(value[1])
+                while len(dancers[k][f'snsr_{s}'][f'{data_type}']) > 500:
+                    del dancers[k][f'snsr_{s}'][f'{data_type}'][0]
+                dpg.configure_item(f'{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'{data_type}'])
+                while len(dancers[k][f'snsr_{s}'][f'bin_{data_type}']) > 500:
+                    del dancers[k][f'snsr_{s}'][f'bin_{data_type}'][0]                 
+                dpg.configure_item(f'bin_{data_type}{k}_{s}', y=dancers[k][f'snsr_{s}'][f'bin_{data_type}'])              
 # function for checking and setting the measurement status of the sensors
-def status(mtw2s, ids=False, finished=False):
+def status(mtw2s, mtw2_locations, ids=False, finished=False):
     for i in range(len(mtw2s)):
         if ids:
-            dpg.set_value(f'mtw2{i}', f'{mtw2s[i].deviceId()}')
+            dpg.set_value(f'mtw2{i}', mtw2_locations[f'{mtw2s[i].deviceId()}'][0])
         if finished:
             dpg.set_value(f'sensor_{i}', 'Finished')
         elif not mtw2s[i].isMeasuring():
