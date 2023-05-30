@@ -30,6 +30,7 @@ with dpg.window(label='MTw2 sensor status panel', pos=(25,195), width=vp_width):
         with dpg.table_row():
             for i in range(9):
                 dpg.add_text('No signal', tag=f'sensor_{i}')
+    dpg.add_text('Click on plot legend variables to show or hide related data')
 # create window for sensors of each dancer
 for w in range(3):
     with dpg.window(label=f'Dancer {wndw_lbl[w]}', pos=wndw_pos[w], width=vp_width, collapsed=True):
