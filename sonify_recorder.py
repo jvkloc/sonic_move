@@ -225,7 +225,7 @@ def sonify_main():
                 if packet.containsCalibratedData():
                     # get acceleration data 
                     acc = packet.calibratedAcceleration()
-                    acc_value = sf.normalise(mtw2_id, 'acc', [acc[0], acc[1], acc[2]])
+                    acc_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'acc', [acc[0], acc[1], acc[2]])]
                     # get total acceleration as Euclidean norm of acceleration
                     #tot_a_value = sf.normalise(mtw2_id, 'tot_a', [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2)]) 
                     # set total acceleration to 1 or 0 with chosen threshold and timeout
@@ -245,7 +245,7 @@ def sonify_main():
                     sf.send_data(mtw2_id, mtw2_ids, 'tot_a', tot_a_value) 
                     # get gyroscope data
                     gyr = packet.calibratedGyroscopeData() 
-                    gyr_value = sf.normalise(mtw2_id, 'gyr', [gyr[0], gyr[1], gyr[2]])                   
+                    gyr_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'gyr', [gyr[0], gyr[1], gyr[2]])]                   
                     # get rate of turn from gyroscope data
                     rot_value = sf.normalise(mtw2_id, 'rot', [sqrt(gyr[0]**2 + gyr[1]**2 + gyr[2]**2)])                   
                     # append gyroscope and rate of turn data to Open Sound Control message
@@ -256,7 +256,7 @@ def sonify_main():
                     sf.send_data(mtw2_id, mtw2_ids, 'rot', rot_value)                        
                     # get magnetic field data 
                     mag = packet.calibratedMagneticField()
-                    mag_value = sf.normalise(mtw2_id, 'mag', [mag[0], mag[1], mag[2]])                   
+                    mag_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'mag', [mag[0], mag[1], mag[2]])]                   
                     # append magnetic field data to Open Sound Control message
                     osc_msg.append(mag_value)
                     # send magnetic field data to dashboard plot
@@ -265,7 +265,7 @@ def sonify_main():
                 if packet.containsOrientation():
                     # get orientation data as Euler angles
                     euler = packet.orientationEuler() 
-                    euler_value = sf.normalise(mtw2_id, 'ori', [euler.x(), euler.y(), euler.z()])                   
+                    euler_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'ori', [euler.x(), euler.y(), euler.z()])]                   
                     # append Euler angles data to Open Sound Control message
                     osc_msg.append(euler_value)                 
                     # send Euler angles data to dashboard plot
