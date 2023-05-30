@@ -15,7 +15,7 @@ import sys
 # set filepath for log file: see line 167
 log_path = ''
 # variables for total acceleration timeout on lines 196-198
-# set Open Sound Control client IP address and port for sending OSC messages: see lines 186-193
+# set Open Sound Control client IP address (string) and port (int) for sending OSC messages: see lines 186-193
 osc_ip = '1.2.3' 
 osc_port = 0
 # #####################################################
