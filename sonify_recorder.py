@@ -225,7 +225,7 @@ def sonify_main():
                 if packet.containsCalibratedData():
                     # get acceleration data 
                     acc = packet.calibratedAcceleration()
-                    acc_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'acc', [acc[0], acc[1], acc[2]])]
+                    acc_value = sf.normalise(mtw2_id, 'acc', [acc[0], acc[1], acc[2]])
                     # get total acceleration as Euclidean norm of acceleration
                     #tot_a_value = sf.normalise(mtw2_id, 'tot_a', [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2)]) 
                     # set total acceleration to 1 or 0 with chosen threshold and timeout
@@ -238,8 +238,9 @@ def sonify_main():
                         # first value is the measured total acceleration
                         tot_a_value = [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2), 0]
                     # append acceleration data to Open Sound Control message
+                    acc_value = [round(val, 5) for val in acc_value)]
                     osc_msg.append(acc_value)
-                    osc_msg.append(tot_a_value[0])
+                    osc_msg.append(round(tot_a_value[0], 5))
                     # send acceleration data to dashboard plot
                     sf.send_data(mtw2_id, mtw2_ids, 'acc', acc_value) 
                     sf.send_data(mtw2_id, mtw2_ids, 'tot_a', tot_a_value) 
