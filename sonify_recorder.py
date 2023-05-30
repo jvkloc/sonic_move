@@ -246,10 +246,11 @@ def sonify_main():
                     sf.send_data(mtw2_id, mtw2_ids, 'tot_a', tot_a_value) 
                     # get gyroscope data
                     gyr = packet.calibratedGyroscopeData() 
-                    gyr_value = [round(val, 5) for val in sf.normalise(mtw2_id, 'gyr', [gyr[0], gyr[1], gyr[2]])]                   
+                    gyr_value = sf.normalise(mtw2_id, 'gyr', [gyr[0], gyr[1], gyr[2]])                   
                     # get rate of turn from gyroscope data
                     rot_value = sf.normalise(mtw2_id, 'rot', [sqrt(gyr[0]**2 + gyr[1]**2 + gyr[2]**2)])                   
                     # append gyroscope and rate of turn data to Open Sound Control message
+                    gyr_value = [round(val, 5) for val in gyr_value]
                     osc_msg.append(gyr_value)
                     osc_msg.append(rot_value[0])
                     # send gyroscope and rate of turn data to dashboard plot
