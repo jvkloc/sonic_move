@@ -16,10 +16,10 @@ import sys
 log_path = ''
 # variables for total acceleration timeout on lines 198-200
 # set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 190-195
-osc_server_ip = '10.139.100.1' 
-osc_server_port = 15220
-osc_client_ip = '10.139.100.1'
-osc_client_port = 15220
+osc_server_ip = '' 
+osc_server_port = 0
+osc_client_ip = ''
+osc_client_port = 0
 # ################################################################################################################
 # variable for stopping recording
 stop_rec = False
@@ -150,7 +150,6 @@ def sonify_main():
                 config_array = xda.XsOutputConfigurationArray()
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_PacketCounter, 0))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_SampleTimeFine, 0)) 
-                #config_array.push_back(xda.XsOutputConfiguration(xda.XDI_CoordSysEnu, 0xFFFF))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_Acceleration, 0xFFFF))
                 config_array.push_back(xda.XsOutputConfiguration(xda.XDI_EulerAngles, 0xFFFF))
                 # set the array to the MTw2
@@ -188,11 +187,11 @@ def sonify_main():
         # install the osc4py3 tools
         osc_startup(logger=logger)
         # create osc4py3 server for testing the OSC messages sent by OSC client: ip, port, name
-        osc_udp_server(osc_ip, osc_port, 'OSC_server')
+        osc_udp_server(osc_server_ip, osc_server_port, 'OSC_server')
         # set handler function for osc4py3 messages
         osc_method('/test/*', sf.handler)
         # create osc4py3 client: ip, port, name
-        osc_udp_client(osc_ip, osc_port, 'OSC_client') 
+        osc_udp_client(osc_client_ip, osc_client_port, 'OSC_client') 
         dpg.set_value('program_status', 'Use dashboard "stop recording" button to stop\n\n' + f'{dpg.get_value("program_status")}')
         print('Use dashboard "stop recording" button to stop\n')
         # variables for total acceleration binary display
@@ -251,7 +250,7 @@ def sonify_main():
                     rot_value = sf.normalise(mtw2_id, 'rot', [sqrt(gyr[0]**2 + gyr[1]**2 + gyr[2]**2)])                   
                     # append gyroscope and rate of turn data to Open Sound Control message
                     osc_msg.append(gyr_value)
-                    osc_msg.append(rot_value)
+                    osc_msg.append(rot_value[0])
                     # send gyroscope and rate of turn data to dashboard plot
                     sf.send_data(mtw2_id, mtw2_ids, 'gyr', gyr_value)
                     sf.send_data(mtw2_id, mtw2_ids, 'rot', rot_value)                        
