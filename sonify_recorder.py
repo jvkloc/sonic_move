@@ -11,14 +11,14 @@ import threading
 import logging
 import time
 import sys
-# #####################################################
+# ################################################################################################################
 # set filepath for log file: see line 167
 log_path = ''
 # variables for total acceleration timeout on lines 196-198
 # set Open Sound Control client IP address (string) and port (int) for sending OSC messages: see lines 186-193
 osc_ip = '1.2.3' 
 osc_port = 0
-# #####################################################
+# ################################################################################################################
 # variable for stopping recording
 stop_rec = False
 # dpg callback for starting recording
