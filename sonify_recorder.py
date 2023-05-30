@@ -14,10 +14,12 @@ import sys
 # ################################################################################################################
 # set filepath for log file: see line 167
 log_path = ''
-# variables for total acceleration timeout on lines 196-198
-# set Open Sound Control client IP address (string) and port (int) for sending OSC messages: see lines 186-193
-osc_ip = '1.2.3' 
-osc_port = 0
+# variables for total acceleration timeout on lines 198-200
+# set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 190-195
+osc_server_ip = '10.139.100.1' 
+osc_server_port = 15220
+osc_client_ip = '10.139.100.1'
+osc_client_port = 15220
 # ################################################################################################################
 # variable for stopping recording
 stop_rec = False
