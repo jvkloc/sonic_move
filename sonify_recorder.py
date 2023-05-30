@@ -14,7 +14,10 @@ import sys
 # #####################################################
 # set filepath for log file: see line 167
 log_path = ''
-# variables for total acceleration timeout on lines 193-195
+# variables for total acceleration timeout on lines 196-198
+# set Open Sound Control client IP address and port for sending OSC messages: see lines 186-193
+ip = '127.0.0.1' 
+port = 50005
 # #####################################################
 # variable for stopping recording
 stop_rec = False
@@ -182,12 +185,12 @@ def sonify_main():
         logger = logging.getLogger('logger')            
         # install the osc4py3 tools
         osc_startup(logger=logger)
-        # create osc4py3 server: ip, port, name
-        osc_udp_server('127.0.0.1', 50005, 'OSC_server')
+        # create osc4py3 server for testing the OSC messages sent by OSC client: ip, port, name
+        osc_udp_server(ip, port, 'OSC_server')
         # set handler function for osc4py3 messages
         osc_method('/test/*', sf.handler)
         # create osc4py3 client: ip, port, name
-        osc_udp_client('127.0.0.1', 50005, 'OSC_client') 
+        osc_udp_client(ip, port, 'OSC_client') 
         dpg.set_value('program_status', 'Use dashboard "stop recording" button to stop\n\n' + f'{dpg.get_value("program_status")}')
         print('Use dashboard "stop recording" button to stop\n')
         # variables for total acceleration binary display
