@@ -1,6 +1,5 @@
 # program code for reading live Awinda MTw2 sensors through Awinda2 USB Dongle
-# Xsens Device API documentation provided with SDK download from
-# https://www.movella.com/support/software-documentation
+# Xsens Device API documentation provided with SDK download from https://www.movella.com/support/software-documentation
 import xsensdeviceapi as xda 
 import XdaCallback as xc
 import sonify_functions as sf
