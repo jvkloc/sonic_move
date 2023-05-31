@@ -13,15 +13,15 @@ import logging
 import time
 import sys
 # ###########################################################################################################
-# set filepath for mtb log file: see line 173                                                                   
+# set filepath for mtb log file: see line 172                                                                   
 log_path = ''                                                                        
-# set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 191-196  
+# set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 190-195  
 osc_server_ip = ''                                                                                 
 osc_server_port = 0                                                                                    
 osc_client_ip = ''                                                                                          
 osc_client_port = 0                                                                                         
-# variable for total acceleration timeout on line 201: default 0.2 seconds                                  
-# set variable for total acceleration trigger threshold (m/s**2) lines 233-241                              
+# variable for total acceleration timeout on line 200: default 0.2 seconds                                  
+# set variable for total acceleration trigger threshold (m/s**2) lines 232-240                              
 acc_threshold = 30                                                                                          
 # ###########################################################################################################
 # dpg callback for starting recording
