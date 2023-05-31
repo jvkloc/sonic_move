@@ -6,7 +6,7 @@ from sonify_recorder import start, stop, set_threshold
 dpg.create_context()
 vp = dpg.create_viewport(title='Sonify dashboard')
 # get viewport width
-vp_width = dpg.get_viewport_width() 
+vp_width = dpg.get_viewport_width()
 # set dancer window labels and positions
 wndw_lbl = ['one', 'two', 'three']
 wndw_pos = [(45,300), (25,320), (5,340)]
