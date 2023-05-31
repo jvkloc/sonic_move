@@ -7,7 +7,7 @@ class XdaCallback(xda.XsCallback):
     def __init__(self, max_buffer_size = 5):
         xda.XsCallback.__init__(self)
         self.m_maxNumberOfPacketsInBuffer = max_buffer_size
-        self.m_packetBuffer = list()
+        self.m_packetBuffer = []
         self.m_lock = Lock()
     # check if there is a data packet available
     def packetAvailable(self):
@@ -18,12 +18,11 @@ class XdaCallback(xda.XsCallback):
     # get the next data packet
     def getNextPacket(self):
         self.m_lock.acquire()
-        if len(self.m_packetBuffer) > 0:
-            oldest_packet = xda.XsDataPacket(self.m_packetBuffer.pop(0))
-            self.m_lock.release()
-            return oldest_packet
-        else:
+        if len(self.m_packetBuffer) <= 0:
             return None
+        oldest_packet = xda.XsDataPacket(self.m_packetBuffer.pop(0))
+        self.m_lock.release()
+        return oldest_packet
     # overwrite Xsens Device API onLiveDataAvailable method
     def onLiveDataAvailable(self, device, packet):
         self.m_lock.acquire()
