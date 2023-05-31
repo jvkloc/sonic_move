@@ -1,8 +1,10 @@
 # program code for reading live Awinda MTw2 sensors through Awinda2 USB Dongle
-import xsensdeviceapi as xda # documentation provided with SDK download
+# Xsens Device API documentation provided with SDK download from
+# https://www.movella.com/support/software-documentation
+import xsensdeviceapi as xda 
 import XdaCallback as xc
 import sonify_functions as sf
-import dearpygui.dearpygui as dpg
+import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
 from osc4py3 import oscmethod as osm # https://osc4py3.readthedocs.io/en/latest/
 from osc4py3.as_eventloop import *
 from osc4py3 import oscbuildparse
@@ -11,20 +13,18 @@ import threading
 import logging
 import time
 import sys
-# ################################################################################################################
-# set filepath for log file: see line 167
-log_path = ''
-# variables for total acceleration timeout on lines 198-200
-# set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 190-195
-osc_server_ip = '' 
-osc_server_port = 0
-osc_client_ip = ''
-osc_client_port = 0
-# set variable for total acceleration threshold (m/s**2)
-acc_treshold = 30
-# ################################################################################################################
-# variable for stopping recording
-stop_rec = False
+# ###########################################################################################################
+# set filepath for mtb log file: see line 173                                                                   
+log_path = ''                                                                        
+# set Open Sound Control IP addresses (string) and ports (int) for sending OSC messages: see lines 191-196  
+osc_server_ip = ''                                                                                 
+osc_server_port = 0                                                                                    
+osc_client_ip = ''                                                                                          
+osc_client_port = 0                                                                                         
+# variable for total acceleration timeout on line 201: default 0.2 seconds                                  
+# set variable for total acceleration trigger threshold (m/s**2) lines 233-241                              
+acc_threshold = 30                                                                                          
+# ###########################################################################################################
 # dpg callback for starting recording
 def start(sender, app_data):
     global stop_rec
@@ -34,10 +34,12 @@ def start(sender, app_data):
 def stop(sender, app_data):
     global stop_rec
     stop_rec = True
-# function for setting the total acceleration threshold
+# dpg callback for setting the total acceleration threshold
 def set_threshold(sender, data):
     global acc_threshold 
     acc_threshold = dpg.get_value(sender)
+# variable for controlling recording
+stop_rec = False
 # main script   
 def sonify_main():
     # create a Xsens device management object and print API version info to the user
