@@ -4,13 +4,24 @@ from math import floor
 # labels for setting MTw2 ids to dashboard
 labels = [ ['acc','Acceleration'], ['tot_a', 'Total Acceleration'], ['ori', 'Orientation'], 
                 ['gyr', 'Gyroscope'], ['rot', 'Rate of Turn'], ['mag', 'Magnetometer'] ]
-# sensor max and min values for data normalisation, 'key':[x, y, z] or 'key':[p, r, y] for Euler angles
-sensors = []
-for i in range(9):
-    sensors.append({'id': None, 'acc_min':[0, 0, 0], 'gyr_min':[0, 0, 0], 'mag_min':[0, 0, 0], 
-                                 'ori_min':[0, 0, 0], 'tot_a_min':[0], 'rot_min':[0],
-                                 'acc_max':[1, 1, 1], 'gyr_max':[1, 1, 1], 'mag_max':[1, 1, 1], 
-                                 'ori_max':[1, 1, 1], 'tot_a_max':[1], 'rot_max':[1]})
+sensors = [
+    {
+        'id': None,
+        'acc_min': [0, 0, 0],
+        'gyr_min': [0, 0, 0],
+        'mag_min': [0, 0, 0],
+        'ori_min': [0, 0, 0],
+        'tot_a_min': [0],
+        'rot_min': [0],
+        'acc_max': [1, 1, 1],
+        'gyr_max': [1, 1, 1],
+        'mag_max': [1, 1, 1],
+        'ori_max': [1, 1, 1],
+        'tot_a_max': [1],
+        'rot_max': [1],
+    }
+    for _ in range(9)
+]
 # initialise y-axes data for data plots
 dancer_1, dancer_2, dancer_3, snsr_1, snsr_2, snsr_3 = {}, {}, {}, {}, {}, {}
 dancers = [dancer_1, dancer_2, dancer_3]
@@ -30,9 +41,9 @@ for i in range(3):
         dancers[i][f'snsr_{j+1}']['ori_r'] = [0]*500
         dancers[i][f'snsr_{j+1}']['ori_y'] = [0]*500
         # initialise xyz-coordinate data for each dancer
-        for data_type in  ['acc', 'gyr' , 'mag']:
-            for h in range(len(coord)):
-                dancers[i][f'snsr_{j+1}'][f'{data_type}_{coord[h]}'] = [0]*500
+        for data_type in ['acc', 'gyr' , 'mag']:
+            for item in coord:
+                dancers[i][f'snsr_{j+1}'][f'{data_type}_{item}'] = [0]*500
 # handler function for sending osc4py3 messages
 def handler(acc ,vel, gyr, rot, mag, ori, mtw2_id):
     print(acc ,vel, gyr, rot, mag, ori, mtw2_id)                
@@ -54,12 +65,12 @@ def normalise(sensor_id, data_type, value):
     sensor = list(filter(lambda sensor: sensor['id'] == sensor_id, sensors))[0]
     # set new minimum and maximum if necessary
     for i in range(len(value)):
-        minimum = sensor[data_type + '_min'][i]
-        maximum = sensor[data_type + '_max'][i]
+        minimum = sensor[f'{data_type}_min'][i]
+        maximum = sensor[f'{data_type}_max'][i]
         if value[i] < minimum:
-            sensor[data_type + '_min'][i] = value[i]
+            sensor[f'{data_type}_min'][i] = value[i]
         elif value[i] > maximum:
-            sensor[data_type + '_max'][i] = value[i]
+            sensor[f'{data_type}_max'][i] = value[i]
         # convert normalised numpy.float64 value from Xsens Devide API function to Python's native float for osc4py3 message
         normalised_data.append(float((value[i] - minimum) / (maximum - minimum)))
     return normalised_data

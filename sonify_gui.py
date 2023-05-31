@@ -6,7 +6,7 @@ from sonify_recorder import start, stop, set_threshold
 dpg.create_context()
 vp = dpg.create_viewport(title='Sonify dashboard')
 # get viewport width
-vp_width = dpg.get_viewport_width() 
+vp_width = dpg.get_viewport_width()
 # set dancer window labels and positions
 wndw_lbl = ['one', 'two', 'three']
 wndw_pos = [(45,300), (25,320), (5,340)]
@@ -22,7 +22,7 @@ with dpg.window(label='Recording control panel', pos=(25,0), width=vp_width):
 # create sensor status display window
 with dpg.window(label='MTw2 sensor status panel', pos=(25,195), width=vp_width): 
     with dpg.table(header_row=False):
-        for i in range(9):
+        for _ in range(9):
             dpg.add_table_column()
         with dpg.table_row():
             for i in range(9):
