@@ -20,6 +20,8 @@ osc_server_ip = ''
 osc_server_port = 0
 osc_client_ip = ''
 osc_client_port = 0
+# set variable for total acceleration threshold (m/s**2)
+acc_treshold = 30
 # ################################################################################################################
 # variable for stopping recording
 stop_rec = False
@@ -32,8 +34,6 @@ def start(sender, app_data):
 def stop(sender, app_data):
     global stop_rec
     stop_rec = True
-# variable for total acceleration threshold
-acc_treshold = 30 # m/s**2
 # function for setting the total acceleration threshold
 def set_threshold(sender, data):
     global acc_threshold 
