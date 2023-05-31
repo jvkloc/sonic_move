@@ -1,4 +1,5 @@
 # class for handling incoming data from sensors
+# Xsens Device API documentation provided with SDK download from https://www.movella.com/support/software-documentation
 import xsensdeviceapi as xda
 from threading import Lock
 
