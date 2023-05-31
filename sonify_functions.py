@@ -5,10 +5,20 @@ from math import floor
 labels = [ ['acc','Acceleration'], ['tot_a', 'Total Acceleration'], ['ori', 'Orientation'], 
                 ['gyr', 'Gyroscope'], ['rot', 'Rate of Turn'], ['mag', 'Magnetometer'] ]
 # sensor max and min values for data normalisation, 'key':[x, y, z] or 'key':[p, r, y] for Euler angles
-sensors = [{'id': None, 'acc_min':[0, 0, 0], 'gyr_min':[0, 0, 0], 'mag_min':[0, 0, 0], 
-            'ori_min':[0, 0, 0], 'tot_a_min':[0], 'rot_min':[0],
-            'acc_max':[1, 1, 1], 'gyr_max':[1, 1, 1], 'mag_max':[1, 1, 1], 
-            'ori_max':[1, 1, 1], 'tot_a_max':[1], 'rot_max':[1]} for _ in range(9)]
+sensors = [ {'id': None, 
+             'acc_min':[0, 0, 0], 
+             'gyr_min':[0, 0, 0], 
+             'mag_min':[0, 0, 0], 
+             'ori_min':[0, 0, 0], 
+             'tot_a_min':[0], 
+             'rot_min':[0],
+             'acc_max':[1, 1, 1], 
+             'gyr_max':[1, 1, 1], 
+             'mag_max':[1, 1, 1], 
+             'ori_max':[1, 1, 1], 
+             'tot_a_max':[1], 
+             'rot_max':[1]} 
+           for _ in range(9) ]
 # initialise y-axes data for data plots
 dancer_1, dancer_2, dancer_3, snsr_1, snsr_2, snsr_3 = {}, {}, {}, {}, {}, {}
 dancers = [dancer_1, dancer_2, dancer_3]
