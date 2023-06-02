@@ -2,7 +2,7 @@ Python interface can be installed using an XDA wheel file:
 
 pip install xsensdeviceapi-<xda version>-cp<Python version>-none-<os type>.whl
 
-Examples:  
+For example:  
 
 pip install xsensdeviceapi-2021.0.0-cp39-none-linux_x86_64.whl
 (MTSDK 2021.0.0 wheel for Python 3.9 on Linux)
