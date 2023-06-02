@@ -1,7 +1,7 @@
 # Sonic Move Dear PyGUI dashboard program code for displaying four sensors in a row
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
-import sonify_functions as sf
-from sonify_recorder import start, stop, set_threshold
+import sm_functions as sf
+from sonic_move_main import start, stop, set_threshold
 # create context and viewport
 dpg.create_context()
 vp = dpg.create_viewport(title='Sonify dashboard')
