@@ -13,7 +13,7 @@ class XdaDongle():
         self.port = None
         self.dongle = None 
         self.callback = None
-        self.chnls = ' '.join(map(str, list(range(11,26)))) # availabel channels from Movella documentation
+        self.chnls = ' '.join(map(str, list(range(11,26)))) # available channels from Movella documentation
         self.slctd_chnl= 11 # hardcoded for Minimi's Biodata Sonate
         self.reserved_chnls = [11] # hardcoded for Minimi's Biodata Sonate
         self.update_rates = None
