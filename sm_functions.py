@@ -42,8 +42,8 @@ for i in range(3):
             for h in range(len(coord)):
                 dancers[i][f'snsr_{j+1}'][f'{data_type}_{coord[h]}'] = [0]*500
 # handler function for sending osc4py3 messages
-def handler(acc ,vel, gyr, rot, mag, ori, mtw2_id):
-    print(acc ,vel, gyr, rot, mag, ori, mtw2_id)                
+def handler(acc, tot_acc, gyr, rot, mag, ori, mtw2_id):
+    print(acc, tot_acc, gyr, rot, mag, ori, mtw2_id)              
 # function for setting the sensor ids to dashboard and to the normalisation dictionary
 def set_sensor_ids(sensor_ids, sensor_locations):
     for i in range(len(sensor_ids)): 
