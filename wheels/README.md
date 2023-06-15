@@ -14,6 +14,7 @@ pip install xsensdeviceapi-2021.0.0-cp39-none-win_amd64.whl
 
 In case your Python IDE is unable to find the xsensdeviceapi module or if the
 auto-completion does not work, try using:
+
 import xsensdeviceapi.xsensdeviceapi_py<Python version>_64 as xda 
 instead of:
 import xsensdeviceapi as xda
