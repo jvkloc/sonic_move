@@ -2,11 +2,9 @@
 # Xsens Device API documentation provided with SDK download from https://www.movella.com/support/software-documentation
 import xsensdeviceapi as xda 
 import XdaDongle as xd
-import XdaCallback as xc
 import sm_functions as sf
 import dearpygui.dearpygui as dpg # https://dearpygui.readthedocs.io/en/latest/
-from osc4py3 import oscmethod as osm # https://osc4py3.readthedocs.io/en/latest/
-from osc4py3.as_eventloop import *
+from osc4py3.as_eventloop import * # https://osc4py3.readthedocs.io/en/latest/
 from osc4py3 import oscbuildparse
 from math import sqrt, floor
 import threading
