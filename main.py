@@ -50,7 +50,7 @@ def main(device='dongle', log_path='/home/file/path/'):
         main_device.preRecordingMode(args[1])
     except Exception as e:
         dpg.set_value(
-            'program_status', f'{e}. Main device setup failed. Aborting.' '
+            'program_status', f'{e}. Main device setup failed. Aborting.'
             f'\n\n{dpg.get_value("program_status")}'
         )
         print(f'{e}. Main device setup failed. Aborting')
