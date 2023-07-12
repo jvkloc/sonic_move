@@ -11,9 +11,7 @@ from XdaDevice import XdaDevice
 from Sensors import Sensors
 from OSC import OSC
 
-def main(
-    device='dongle', log_path='/home/jvkloc/Documents/Sonify/'
-):
+def main(device='dongle', log_path='/home/file/path/'):
     """Sonic Move main script.
     Parameters
     --------------
