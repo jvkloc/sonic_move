@@ -1,33 +1,53 @@
-# class for handling incoming data from sensors
-# Xsens Device API documentation provided with SDK download from https://www.movella.com/support/software-documentation
-import xsensdeviceapi as xda
 from threading import Lock
+# Xsens Device API documentation provided with SDK download:
+# https://www.movella.com/support/software-documentation
+import xsensdeviceapi as xda
+
 
 class XdaCallback(xda.XsCallback):
+    """Class for handling incoming data from sensors. XdaCallback
+    inherits the Xsens Device API XsCallback class.
+    """
+
     def __init__(self, max_buffer_size = 5):
+        """Initialise XdaCallback object.
+        Parameters
+        --------------
+        max_buffer_size : int
+            The maximum length of data packet list.
+        Attributes
+        ------------
+        max_buffered_packets : int
+            Receives the parameter max_buffer_size
+        packet_buffer : list
+            A list for data packets waiting to be processed.
+        lock : Lock object
+            A Lock object for packet handling.
+         """
         xda.XsCallback.__init__(self)
-        self.m_maxNumberOfPacketsInBuffer = max_buffer_size
-        self.m_packetBuffer = []
-        self.m_lock = Lock()
-    # check if there is a data packet available
+        self.max_buffered_packets = max_buffer_size
+        self.packet_buffer = []
+        self.lock = Lock()
+
     def packetAvailable(self):
-        self.m_lock.acquire()
-        res = len(self.m_packetBuffer) > 0
-        self.m_lock.release()
+        self.lock.acquire()
+        res = len(self.packet_buffer) > 0
+        self.lock.release()
         return res
-    # get the next data packet
+
     def getNextPacket(self):
-        self.m_lock.acquire()
-        if len(self.m_packetBuffer) <= 0:
+        self.lock.acquire()
+        if len(self.packet_buffer) <= 0:
             return None
-        oldest_packet = xda.XsDataPacket(self.m_packetBuffer.pop(0))
-        self.m_lock.release()
+        oldest_packet = xda.XsDataPacket(self.packet_buffer.pop(0))
+        self.lock.release()
         return oldest_packet
-    # overwrite Xsens Device API onLiveDataAvailable method
+    
+    # Overwriting Xsens Device API onLiveDataAvailable method.
     def onLiveDataAvailable(self, device, packet):
-        self.m_lock.acquire()
+        self.lock.acquire()
         if packet != 0:
-            while len(self.m_packetBuffer) >= self.m_maxNumberOfPacketsInBuffer:
-                self.m_packetBuffer.pop()
-            self.m_packetBuffer.append(xda.XsDataPacket(packet))
-            self.m_lock.release()
+            while len(self.packet_buffer) >= self.max_buffered_packets:
+                self.packet_buffer.pop()
+            self.packet_buffer.append(xda.XsDataPacket(packet))
+            self.lock.release()
