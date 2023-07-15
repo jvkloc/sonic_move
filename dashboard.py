@@ -6,7 +6,7 @@ import dancers as ds
 
 
 class Dashboard:
-    """Class for Sonic Move Biodata Sonate dashboard.
+    """Class for Sonic Move Biodata Sonata dashboard.
     Argument and function names describe what is happening.
     A few additional comments have been added for readability.
     """
@@ -42,7 +42,7 @@ class Dashboard:
         self.acc_threshold = dpg.get_value(sender)
 
     def setup(self):
-        """setup creates a Dear PyGUI dashboard. """
+        """setup creates a Dear PyGui dashboard. """
         dpg.create_context()
         vp = dpg.create_viewport(title='Sonify dashboard')
         vp_width = dpg.get_viewport_width()
@@ -85,7 +85,7 @@ class Dashboard:
             )
         # Create a window for sensors of each dancer.
         for i in range(3):
-            w = dpg.add_window( # Attribute error: __enter__
+            w = dpg.add_window(
                 label=f'Dancer {window_lbl[i]}', pos=window_pos[i],
                 width=vp_width, collapsed=True
             )
