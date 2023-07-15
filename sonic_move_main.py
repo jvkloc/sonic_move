@@ -1,4 +1,4 @@
-# Sonic Move Biodata Sonate main script.
+# Sonic Move Biodata Sonata main script.
 import sys
 import argparse
 # Xsens Device API documentation provided with SDK download:
@@ -18,10 +18,10 @@ def recording_loop():
 
 
 def main():
-    """Sonic Move Biodata Sonate main function. Xsens Device API
+    """Sonic Move Biodata Sonata main function. Xsens Device API
     library is written in mixedCase style which clashes with Dear
     PyGui's lower_case_with_underscores. The latter style is
-    easier to read so also Sonic Move Biodata Sonate Python
+    easier to read so also Sonic Move Biodata Sonata Python
     scripts are written using it. For usability it is probably the
     best to set your own defaults for the main function
     arguments, instead of typing them every time separately.
