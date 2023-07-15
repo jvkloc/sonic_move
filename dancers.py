@@ -1,6 +1,6 @@
-# Class for storing sensor data of each Biodata Sonate dancer.
+# Class for storing sensor data of each Biodata Sonata dancer.
 class Dancers:
-    """ This class stores sensor data of each Biodata Sonate
+    """ This class stores sensor data of each Biodata Sonata
     dancer for the dashboard plots.
     """
     def __init__(self):
@@ -15,7 +15,7 @@ class Dancers:
         self.dancers = [
                 {'snsr_1' : {} ,'snsr_2' : {}, 'snsr_3' : {}} for _ in range(3)
         ]
-        # Length of data plots' x-axis is 500, initialise data as zeros.
+        # Length of data plots' x-axes is 500, initialise data as zeros.
         for dancer in self.dancers:
                 for i in range(1, 4):
                     dancer[f'snsr_{i}']['tot_a'] = [0]*500
