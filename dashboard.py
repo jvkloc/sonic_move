@@ -2,7 +2,7 @@
 import threading
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
-import Dancers as ds
+import dancers as ds
 
 
 class Dashboard:
