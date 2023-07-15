@@ -3,5 +3,4 @@ Sonic Move Biodata Sonate Xsens Device API Python 3.10 code for recording MTw2 s
 Python wheel files for Linux and Windows with installation instructions are in the `wheels` folder.
 
 Sonic Move: https://uefconnect.uef.fi/en/group/sonic-move-creative-and-expressive-sonification-of-human-movement/
-
-Dance Theatre Minimi and Biodata Sonate: https://minimi.fi/
+\nDance Theatre Minimi and Biodata Sonate: https://minimi.fi/
