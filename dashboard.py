@@ -1,4 +1,4 @@
-# A class for Sonic Move Biodata Sonata DearPyGUI dashboard.
+# A class for Sonic Move Biodata Sonata DearPyGui dashboard.
 import threading
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
