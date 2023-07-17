@@ -1,4 +1,4 @@
-# A class for Xsens sensors.
+# A class for Sonic Move Biodata Sonata sensors.
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
 # https://osc4py3.readthedocs.io/en/latest/
@@ -254,6 +254,4 @@ def plot_log(file_path):
             sensor.send_data(sensor_id, 'rot', rot_value)
             sensor.send_data(sensor_id, 'mag', mag_value)
             sensor.send_data(sensor_id, 'ori', euler_value)
-
-if __name__ == '__main__':
-    snsrs = Sensors()
+            
