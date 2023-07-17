@@ -38,6 +38,7 @@ def osc(server_ip, server_port, client_ip, client_port):
    
 
 def osc_handler(acc, tot_acc, gyr, rot, mag, ori, mtw2_id):
+   
    print(acc, tot_acc, gyr, rot, mag, ori, mtw2_id)
 
                                                     
