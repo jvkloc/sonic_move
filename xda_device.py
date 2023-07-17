@@ -1,4 +1,4 @@
-# A class for an Xsens main device and attached sensors.
+# A class for an Xsens main device.
 import sys
 import time
 from math import sqrt
@@ -637,10 +637,3 @@ class XdaDevice():
             f'{dpg.get_value("program_status")}'
         )
         print('Successful exit. Ready for restart')
-
-if __name__ == '__main__':
-    #device = 'dongle'
-    device = 'station'
-    path = Path(r'C:\Users\wksadmin\Downloads\lokit')    
-    md = XdaDevice(device, path)
-    
