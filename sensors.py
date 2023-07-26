@@ -105,6 +105,7 @@ class Sensors:
         ]
         self.dancers = dancers()
 
+    
     def set_ids(self):
         """set_ids sets sensor IDs to the dashboard and to
         self.minmax dictionary list used for data scaling.
@@ -121,6 +122,7 @@ class Sensors:
                     label=f'{sensor_id} {self.labels[j][1]}'
                 )
 
+    
     def scale_data(self, sensor_id, data_type, value):
         """scale_data scales sensor data to the unit interval."""
         
@@ -141,6 +143,7 @@ class Sensors:
             )
         return scaled_data
 
+    
     def send_data(self, sensor_id, data_type, value):
         """send_data sends sensor data and IDS to the dashboard
         plots.
@@ -207,6 +210,7 @@ class Sensors:
                    y=self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}']
                 )
 
+    
     def status(self, ids=False, finished=False):
         """status sets and checks the measurement status of
         the sensors.
@@ -221,6 +225,7 @@ class Sensors:
                 dpg.set_value(f'sensor_{i}', 'Error!')
             else:
                 dpg.set_value(f'sensor_{i}', 'Measuring')
+
 
 def plot_log(file_path):
     """plot_log plots a txt log file from the dashboard file dialog.
@@ -268,6 +273,6 @@ def plot_log(file_path):
             sensor.send_data(sensor_id, 'mag', mag_value)
             sensor.send_data(sensor_id, 'ori', euler_value)
 
+
 if __name__ == '__main__':
     snsrs = Sensors()
-
