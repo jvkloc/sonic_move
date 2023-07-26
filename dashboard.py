@@ -1,4 +1,5 @@
 # A class for Sonic Move Biodata Sonata DearPyGui dashboard.
+import sys
 import threading
 
 # https://dearpygui.readthedocs.io/en/latest/
@@ -21,6 +22,8 @@ class Dashboard:
     file_dialog_cancel
     setup
     """
+
+    
     def __init__(self, device, path):
         """Initialises a dashboard for Sonic Move Biodata Sonata.
         Parameters
@@ -35,8 +38,10 @@ class Dashboard:
         main_device : XdaDevice
             The main Xsens device used for recording.
         """
+        
         self.setup()
         self.main_device = xd.XdaDevice(device, path)
+
     
     def set_threshold(self, sender, app_data):
         
@@ -308,3 +313,4 @@ class Dashboard:
             width=800 ,height=500
         ):
             dpg.add_file_extension('.txt', color=(0, 255, 0, 255))
+            
