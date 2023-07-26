@@ -87,7 +87,6 @@ def main():
         help='File path for saving log files.'
     )    
    args = parser.parse_args()
-   
    try:          
       osc(args.server_ip, args.server_port, args.client_ip, args.client_port)
    except Exception as e:
@@ -103,6 +102,7 @@ def main():
    dpg.show_viewport()
    dpg.start_dearpygui()
    dpg.destroy_context()
+
 
 if __name__ == '__main__':
    main()
