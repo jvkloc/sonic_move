@@ -97,6 +97,7 @@ class Dashboard:
     
     def setup(self):
         """setup creates a Dear PyGui dashboard. """
+        
         initial_data = [0] * 500
         dpg.create_context()
         vp = dpg.create_viewport(title='Sonify dashboard')
