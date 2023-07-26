@@ -27,6 +27,7 @@ def osc(server_ip, server_port, client_ip, client_port):
    client_port :
        Open Sound Control client port.
    """
+   
    logging.basicConfig(
        format='%(asctime)s - %(processName)s - %(name)s'
         ' - %(levelname)s - %(message)s', level=logging.WARNING
@@ -38,7 +39,6 @@ def osc(server_ip, server_port, client_ip, client_port):
    
 
 def osc_handler(acc, tot_acc, gyr, rot, mag, ori, mtw2_id):
-   
    print(acc, tot_acc, gyr, rot, mag, ori, mtw2_id)
 
                                                     
@@ -60,6 +60,7 @@ def main():
        File path for saving log files. Recommendation is to create a 
        folder just for the logs. 
    """
+   
    parser = argparse.ArgumentParser()
    parser.add_argument(
        '--server_ip', '-si', type=str, default='127.0.0.1',
