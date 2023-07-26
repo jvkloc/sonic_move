@@ -15,6 +15,8 @@ class XdaCallback(xda.XsCallback):
     get_next_packet
     onLiveDataAvailable
     """
+
+    
     def __init__(self, max_buffer_size = 5):
         """Initialise XdaCallback object.
         Parameters
@@ -30,6 +32,7 @@ class XdaCallback(xda.XsCallback):
         lock : Lock
             A Lock object for packet handling.
          """        
+        
         xda.XsCallback.__init__(self)
         self.max_buffered_packets = max_buffer_size
         self.packet_buffer = []
@@ -51,7 +54,7 @@ class XdaCallback(xda.XsCallback):
         self.lock.release()
         return oldest_packet  
     
-    # Overwriting Xsens Device API onLiveDataAvailable method.
+    # Overriding Xsens Device API onLiveDataAvailable method.
     def onLiveDataAvailable(self, device, packet):
         
         self.lock.acquire()
