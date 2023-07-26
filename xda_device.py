@@ -1,4 +1,4 @@
-# A class for an Xsens main device.
+# A class for an Xsens main device and attached sensors.
 import sys
 import time
 from math import sqrt
@@ -79,6 +79,7 @@ class XdaDevice():
         acc_threshold : int
             Default is 30 m/s**2 for a total acceleration 'hit'.
         """
+        
         self.control = None
         self.port = None
         self.device = None
@@ -102,6 +103,7 @@ class XdaDevice():
         the main device and prints out the Xsens Device API
         version if successful.
         """
+        
         dpg.set_value(
         'program_status', 'Creating an XsControl object...\n'
         )
@@ -120,6 +122,7 @@ class XdaDevice():
                 f'Xsens Device API version: {xdaVersion.toXsString()}\n'
             )
 
+    
     def open_device(self):
         """open_device finds the main device, opens the port it is
         connected to, sets the device to the XsControl object and
@@ -127,6 +130,7 @@ class XdaDevice():
         self.device while printing information about the steps
         to terminal and the dashboard.
         """
+        
         dpg.set_value(
             'program_status', 'Scanning for ports with Xsens devices...\n'
             f'{dpg.get_value("program_status")}'
@@ -230,6 +234,7 @@ class XdaDevice():
             print('Callback handler setup failed. Aborting')
             sys.exit(1)
 
+    
     def configure_device(self):
         """configure_device sets the device to configuration mode,
         enables device radio, sets device live data recording
@@ -238,6 +243,7 @@ class XdaDevice():
         printing information about all the steps to the dashboard
         and terminal.
         """
+        
         try:
             self.device.gotoConfig()
         except Exception as e:
@@ -301,7 +307,6 @@ class XdaDevice():
             self.device.disableRadio()
             sys.exit(1)
         try:
-            #if len(self.sensors.sensors) > 0:
             self.sensors.status(ids=True)
         except Exception as e:
             dpg.set_value(
@@ -315,7 +320,21 @@ class XdaDevice():
             )
             self.device.disableRadio()
             sys.exit(1)
+        try:
+            self.sensors.set_ids()
+        except Exception as e:
+            dpg.set_value(
+                'program_status', f'{e} Failed to set sensor ids to the scaling' 
+                f' dictionary. Aborting.\n\n{dpg.get_value("program_status")}'
+            )
+            print(
+                f'{e} Failed to set sensor ids to the to the scaling dictionary' 
+                ' Aborting.'
+            )
+            self.device.disableRadio()
+            sys.exit(1)        
 
+    
     def go_to_recording_mode(self):
         """go_to_recording_mode sets the device and connected
         sensors to measurement mode, confirms that the sensors
@@ -327,6 +346,7 @@ class XdaDevice():
         start recording with the main device. Information about
         all the steps is printed to the dashboard and terminal.
         """
+        
         try:
             self.device.gotoMeasurement()
         except Exception as e:
@@ -404,6 +424,7 @@ class XdaDevice():
         )
         print('Use the "Recording on/off" button to stop\n')
 
+    
     def recording_loop(self, timeout=0.2):
         """recording_loop takes care of live data recording and
         sending it to dashboard plots as well as to Open Sound
@@ -417,14 +438,15 @@ class XdaDevice():
             Number of seconds before next possible registration of a
             threshold surpassing total acceleration value.
         """
+        
         timer = 0
         data_out = StringIO()
         while self.recording:
             osc_msg = []
+            
             if self.callback.packet_available():
                 packet = self.callback.get_next_packet()
-                print('packet:', packet)           # debug print, remove
-
+                
                 if packet.containsStoredDeviceId():
                     sensor_id = f'{packet.deviceId()}'
                     # Set ID for OSC and txt log as xy whre x is dancer 
@@ -433,11 +455,8 @@ class XdaDevice():
                     dancer = self.sensors.locations[sensor_id][1]
                     sensor = self.sensors.locations[sensor_id][2]
                     osc_id = dancer * 10 + sensor
+                    print('OSC ID:', osc_id)
                     osc_msg.append(osc_id)
-                    data_out.write(
-                        f'{self.sensors.locations[sensor_id][1]}'
-                        f'{self.sensors.locations[sensor_id][2]}'
-                    )
 
                 if packet.containsCalibratedData():
                     acc = packet.freeAcceleration()
@@ -446,16 +465,17 @@ class XdaDevice():
                     )
                     acc_value = [round(val, 5) for val in acc_value]
                     tot_acc = [sqrt(acc[0]**2 + acc[1]**2 + acc[2]**2)]
-                    check_tot_acc = tot_acc > self.acc_threshold
-                    if check_tot_acc and time() - timer > self.acc_threshold:
+                    check_threshold = tot_acc[0] > self.acc_threshold
+                    if check_threshold and time() - timer > self.acc_threshold:
                         tot_acc.append(1)
                         timer = time()
-                    elif not check_tot_acc:
+                    else:
                         tot_acc.append(0)
                     osc_msg.append(acc_value[0])
                     osc_msg.append(acc_value[1])
                     osc_msg.append(acc_value[2])
                     osc_msg.append(round(tot_acc[0], 5))
+                    osc_msg.append(tot_acc[1])
                     self.sensors.send_data(sensor_id, 'acc', acc_value)
                     self.sensors.send_data(sensor_id, 'tot_a', tot_acc)
 
@@ -493,30 +513,27 @@ class XdaDevice():
                     osc_msg.append(euler_value[1])
                     osc_msg.append(euler_value[2])
                     self.sensors.send_data(sensor_id, 'ori', euler_value)
-                # Send Open Sound Control message.
-                message = oscbuildparse.OSCMessage(
-                    '/OSC/*', None, osc_msg
-                )
-                osc_send(message, 'OSC_client')
-                osc_process()
+                
+                message = oscbuildparse.OSCMessage('/OSC/*', None, osc_msg)
                 # Write data to a line in data_out.
                 osc_str = [f': {elem}' for elem in osc_msg]
                 for index, val in enumerate(osc_str):
-                    if index == 0:
-                        continue
                     data_out.write(osc_str[index])
-                data_out.write('\n')
+                data_out.write('\n')                
+                osc_send(message, 'OSC_client')
+                osc_process()    
             # Check sensor status and set it to the dashboard.
             self.sensors.status(self.sensors.sensors)
+            
         # Recording stopped from the dashboard button.
         osc_terminate()
         self.sensors.status(self.sensors.sensors, finished=True)
         log_file = Path(
             f'{self.log_path}\{datetime.now().strftime("%d.%m.%Y-%H.%M.%S")}.txt'
         )
-        data = data_out.getvalue()
+        log_data = data_out.getvalue()
         with open(log_file, 'w') as log:
-            log.write(data)
+            log.write(log_data)
         dpg.set_value('program_status', 'Data from the recording was'
             f' written to {log_file}\n{dpg.get_value("program_status")}'
         )
@@ -637,3 +654,4 @@ class XdaDevice():
             f'{dpg.get_value("program_status")}'
         )
         print('Successful exit. Ready for restart')
+    
