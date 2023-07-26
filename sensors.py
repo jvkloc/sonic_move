@@ -1,7 +1,8 @@
-# A class for Sonic Move Biodata Sonata sensors.
+# A class for Xsens sensors.
+from math import floor
+
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
-# https://osc4py3.readthedocs.io/en/latest/
 
 
 def dancers(number_of_dancers=3, number_of_sensors=3):
@@ -14,6 +15,7 @@ def dancers(number_of_dancers=3, number_of_sensors=3):
     number_of_sensors : int
         Number of sensors per dancer. Default value is three.
     """
+    
     dancers = [
             {'snsr_1' : {} ,'snsr_2' : {}, 'snsr_3' : {}}
             for _ in range(number_of_dancers)
@@ -46,6 +48,8 @@ class Sensors:
     status
     plot_log
     """
+
+    
     def __init__(self):
         """Initialises a Sensors object.
         Parameters
@@ -68,6 +72,7 @@ class Sensors:
             List of dictionaries of dictionaries for each dancers'
             sensor data.
         """
+        
         self.axes  = ['x', 'y', 'z']
         self.sensors = None
         # locations[1]: dancers 1,2 and 3.
@@ -85,8 +90,8 @@ class Sensors:
         }
         self.labels = [
             ('acc','Acceleration'), ('tot_a', 'Total Acceleration'),
-            ('ori', 'Orientation'), ('gyr', 'Gyroscope'), ('rot', 'Rate of Turn'),
-            ('mag', 'Magnetometer')
+            ('ori', 'Orientation'), ('gyr', 'Gyroscope'), 
+            ('rot', 'Rate of Turn'), ('mag', 'Magnetometer')
         ]
         self.minmax = [
             {
@@ -100,24 +105,29 @@ class Sensors:
         ]
         self.dancers = dancers()
 
-    def set_ids(self, sensor_ids):
+    def set_ids(self):
         """set_ids sets sensor IDs to the dashboard and to
         self.minmax dictionary list used for data scaling.
         """
-        for i, idn in enumerate(sensor_ids):
-            w = floor(i/3)
-            k = i - 3*w + 1
-            self.minmax[i]['id'] = idn
+        
+        for i, sensor in enumerate(self.sensors):
+            sensor_id = f'{sensor.deviceId()}'        
+            w = self.locations[sensor_id][1]
+            k = self.locations[sensor_id][2]
+            self.minmax[i]['id'] = sensor_id
             for j in range(6):
                 dpg.configure_item(
-                    f'dncr{w+1}_snsr{k}_{labels[j][0]}',
-                    label=f'{self.locations[self.minmax[i]][0]} {labels[j][1]}'
+                    f'dncr{w}_snsr{k}_{self.labels[j][0]}',
+                    label=f'{sensor_id} {self.labels[j][1]}'
                 )
 
     def scale_data(self, sensor_id, data_type, value):
         """scale_data scales sensor data to the unit interval."""
+        
         scaled_data = []
-        sensor = self.minmax[sensor_id]
+        sensor = [
+            sensor for sensor in self.minmax if sensor['id'] == sensor_id
+        ][0]
         for i, val in enumerate(value):
             minimum = sensor[f'{data_type}_min'][i]
             maximum = sensor[f'{data_type}_max'][i]
@@ -135,6 +145,7 @@ class Sensors:
         """send_data sends sensor data and IDS to the dashboard
         plots.
         """
+        
         s = self.locations[sensor_id][2]
         k = self.locations[sensor_id][1] - 1
         # Set xyz coordinate data to their plots.
@@ -185,21 +196,22 @@ class Sensors:
             cutoff = len(self.dancers[k][f'snsr_{s}'][f'b_{data_type}']) - 500
             if cutoff> 0:
                 del self.dancers[k][f'snsr_{s}'][f'b_{data_type}'][0]
-            #if self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 0:
-            dpg.configure_item(
-                f'b_{data_type}{k}_{s}',
-                y=self.dancers[k][f'snsr_{s}'][f'b_{data_type}']
-            )
-            #elif self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 1:
-            #    dpg.configure_item(
-            #        f'b_{data_type}{k}_{s}',
-            #        y=self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}']
-            #    )
+            if self.dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 0:
+                dpg.configure_item(
+                    f'b_{data_type}{k}_{s}',
+                    y=self.dancers[k][f'snsr_{s}'][f'b_{data_type}']
+                )
+            elif self.dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 1:
+                dpg.configure_item(
+                   f'b_{data_type}{k}_{s}',
+                   y=self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}']
+                )
 
     def status(self, ids=False, finished=False):
-        """This function sets and checks the measurement status of
+        """status sets and checks the measurement status of
         the sensors.
         """
+        
         for i, sensor in enumerate(self.sensors):
             if ids:
                 dpg.set_value(f'snsr_id{i}', f'{sensor.deviceId()}')
@@ -216,6 +228,7 @@ def plot_log(file_path):
     method recording_loop contains the data from a single
     data packet sent by a sensor.
     """
+    
     sensor = Sensors()
     with open(file_path, 'r') as log:
         sensor_id = None
@@ -254,4 +267,7 @@ def plot_log(file_path):
             sensor.send_data(sensor_id, 'rot', rot_value)
             sensor.send_data(sensor_id, 'mag', mag_value)
             sensor.send_data(sensor_id, 'ori', euler_value)
-            
+
+if __name__ == '__main__':
+    snsrs = Sensors()
+
