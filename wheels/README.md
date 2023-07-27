@@ -1,6 +1,6 @@
 Python interface can be installed using an XDA wheel file:
 
-pip install xsensdeviceapi-<xda version>-cp<Python version>-none-<os type>.whl
+pip install xsensdeviceapi-"xda version"-cp"Python version"-none-"os type".whl
 
 For example:  
 
