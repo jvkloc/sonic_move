@@ -88,11 +88,12 @@ class Dashboard:
             self.main_device.device.disableRadio()
         except Exception as e:
             dpg.set_value(
-                'program_status', 'Radio disabling failed.'
+                'program_status', 'Radio disabling failed.' 
+                ' Perhaps it was not on.'
                 f'{dpg.get_value("program_status")}'
             )
-            print('Radio disabling failed.')            
-        sys.exit(1)        
+            print('Radio disabling failed. Pehaps it was not on.')            
+        sys.exit(0)        
 
     
     def setup(self):
