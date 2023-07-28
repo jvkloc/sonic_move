@@ -80,7 +80,7 @@ class Dashboard:
     def exit_program(self, sender, app_data):
         
         dpg.set_value(
-            'program_status', 'Program exited by user.'
+            'program_status', 'Program exited by user.\n\n'
             f'{dpg.get_value("program_status")}'
         )
         print('Program exited by user.')
