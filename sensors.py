@@ -272,7 +272,3 @@ def plot_log(file_path):
             sensor.send_data(sensor_id, 'rot', rot_value)
             sensor.send_data(sensor_id, 'mag', mag_value)
             sensor.send_data(sensor_id, 'ori', euler_value)
-
-
-if __name__ == '__main__':
-    snsrs = Sensors()
