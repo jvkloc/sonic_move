@@ -92,7 +92,7 @@ class Dashboard:
                 ' Perhaps it was not on.'
                 f'{dpg.get_value("program_status")}'
             )
-            print('Radio disabling failed. Pehaps it was not on.')            
+            print('Radio disabling failed. Perhaps it was not on.')            
         sys.exit(0)        
 
     
