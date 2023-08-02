@@ -455,7 +455,6 @@ class XdaDevice():
                     dancer = self.sensors.locations[sensor_id][1]
                     sensor = self.sensors.locations[sensor_id][2]
                     osc_id = dancer * 10 + sensor
-                    print('OSC ID:', osc_id)
                     osc_msg.append(osc_id)
 
                 if packet.containsCalibratedData():
@@ -516,7 +515,7 @@ class XdaDevice():
                 
                 message = oscbuildparse.OSCMessage('/OSC/*', None, osc_msg)
                 # Write data to a line in data_out.
-                osc_str = [f': {elem}' for elem in osc_msg]
+                osc_str = [f'{elem}: ' for elem in osc_msg]
                 for index, val in enumerate(osc_str):
                     data_out.write(osc_str[index])
                 data_out.write('\n')                
