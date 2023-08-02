@@ -56,7 +56,9 @@ class Dashboard:
     def file_dialog_callback(self, sender, app_data):
         
         log_file_path = app_data['file_path_name']
-        plot_log(log_file_path)
+        data_dicts = dancers()
+        axes = ['x', 'y', 'z']
+        plot_log(log_file_path, data_dicts, axes)
 
     
     #def file_dialog_cancel(self, sender, app_data):
