@@ -227,14 +227,26 @@ class Sensors:
                 dpg.set_value(f'sensor_{i}', 'Measuring')
 
 
-def plot_log(file_path):
+def plot_log(file_path, dancers):
     """plot_log plots a txt log file from the dashboard file dialog.
     One line in the txt log file written by XdaDevice class
     method recording_loop contains the data from a single
     data packet sent by a sensor.
     """
     
-    sensor = Sensors()
+    # locations[1]: dancers 1,2 and 3.
+    # locations[2]: 1 for left, 2 for right, 3 for torso.
+    locations = {
+        '00B42D46' : ['left', 1, 1], # dancer 1 left etc.
+        '00B42D4F' : ['right', 1, 2],
+        '00B42D4B' : ['torso', 1, 3],
+        '00B42D56' : ['left', 2, 1],
+        '00B42D32' : ['right', 2, 2],
+        '00B42D44' : ['torso', 2, 3],
+        '00B42D54' : ['left', 3, 1],
+        '00B42D4E' : ['right', 3, 2],
+        '00B42B48' : ['torso', 3, 3]
+    }    
     with open(file_path, 'r') as log:
         sensor_id = None
         for line in log.readlines():
@@ -266,9 +278,77 @@ def plot_log(file_path):
             mag_value = [float(val) for val in mag_value]
             euler_value = line.split(': ')[12:15]
             euler_value = [float(val) for val in euler_value]
-            sensor.send_data(sensor_id, 'acc', acc_value)
-            sensor.send_data(sensor_id, 'tot_a', tot_a_value)
-            sensor.send_data(sensor_id, 'gyr', gyr_value)
-            sensor.send_data(sensor_id, 'rot', rot_value)
-            sensor.send_data(sensor_id, 'mag', mag_value)
-            sensor.send_data(sensor_id, 'ori', euler_value)
+            send_log_data(sensor_id, 'acc', acc_value, dancers, locations)
+            send_log_data(sensor_id, 'tot_a', tot_a_value, dancers, locations)
+            send_log_dataa(sensor_id, 'gyr', gyr_value, dancers, locations)
+            send_log_data(sensor_id, 'rot', rot_value, dancers, locations)
+            send_log_dataa(sensor_id, 'mag', mag_value, dancers, locations)
+            sensor.send_log_data(
+                sensor_id, 'ori', euler_value, dancers, locations
+            )
+            
+def send_log_data(sensor_id, data_type, value, dancers, locations):
+    """send_log_data sends sensor data from a logfile to the dashboard
+    plots.
+    """    
+    
+    s = locations[sensor_id][2]
+    k = locations[sensor_id][1] - 1    
+    # Set xyz coordinate data to their plots.
+    if data_type in ['acc', 'gyr', 'mag']:
+        for i, val in enumerate(value):
+            dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}'].append(val)
+            cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}']) - 500
+            if  cutoff > 0:
+                del dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}'][0]
+            dpg.configure_item(
+                f'{data_type}{k}_{s}{self.axes[i]}',
+                y=dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}']
+            )
+    # Set Euler angles data to its plot.
+    elif data_type == 'ori':
+        dancers[k][f'snsr_{s}'][f'{data_type}_p'].append(value[0])
+        dancers[k][f'snsr_{s}'][f'{data_type}_r'].append(value[1])
+        dancers[k][f'snsr_{s}'][f'{data_type}_y'].append(value[2])
+        for angle in ['p', 'y', 'r']:
+            cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}_{angle}']) - 500
+            if cutoff > 0:
+                del dancers[k][f'snsr_{s}'][f'{data_type}_{angle}'][0]
+            dpg.configure_item(
+                f'{data_type}{k}_{s}{angle}',
+                y=dancers[k][f'snsr_{s}'][f'{data_type}_{angle}']
+            )
+    # Set rate of turn data to its plot.
+    elif data_type == 'rot':
+        dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
+        cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}']) - 500
+        if cutoff > 0:
+            del dancers[k][f'snsr_{s}'][f'{data_type}'][0]
+        dpg.configure_item(
+            f'{data_type}{k}_{s}',
+            y=dancers[k][f'snsr_{s}'][f'{data_type}']
+        )
+    # Set total acceleration and binary value data to their plot.
+    elif data_type == 'tot_a':
+        dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
+        dancers[k][f'snsr_{s}'][f'b_{data_type}'].append(value[1])
+        cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}']) - 500
+        if cutoff > 0:
+            del dancers[k][f'snsr_{s}'][f'{data_type}'][0]
+        dpg.configure_item(
+            f'{data_type}{k}_{s}',
+            y=dancers[k][f'snsr_{s}'][f'{data_type}']
+        )
+        cutoff = len(dancers[k][f'snsr_{s}'][f'b_{data_type}']) - 500
+        if cutoff> 0:
+            del dancers[k][f'snsr_{s}'][f'b_{data_type}'][0]
+        if dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 0:
+            dpg.configure_item(
+                f'b_{data_type}{k}_{s}',
+                y=dancers[k][f'snsr_{s}'][f'b_{data_type}']
+            )
+        elif dancers[k][f'snsr_{s}'][f'b_{data_type}'] == 1:
+            dpg.configure_item(
+               f'b_{data_type}{k}_{s}',
+               y=dancers[k][f'snsr_{s}'][f'b_{data_type}']
+            )
