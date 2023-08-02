@@ -227,7 +227,7 @@ class Sensors:
                 dpg.set_value(f'sensor_{i}', 'Measuring')
 
 
-def plot_log(file_path, dancers):
+def plot_log(file_path, dancers, axes):
     """plot_log plots a txt log file from the dashboard file dialog.
     One line in the txt log file written by XdaDevice class
     method recording_loop contains the data from a single
@@ -278,16 +278,26 @@ def plot_log(file_path, dancers):
             mag_value = [float(val) for val in mag_value]
             euler_value = line.split(': ')[12:15]
             euler_value = [float(val) for val in euler_value]
-            send_log_data(sensor_id, 'acc', acc_value, dancers, locations)
-            send_log_data(sensor_id, 'tot_a', tot_a_value, dancers, locations)
-            send_log_dataa(sensor_id, 'gyr', gyr_value, dancers, locations)
-            send_log_data(sensor_id, 'rot', rot_value, dancers, locations)
-            send_log_dataa(sensor_id, 'mag', mag_value, dancers, locations)
+            send_log_data(s
+                          ensor_id, 'acc', acc_value, dancers, locations, axes
+                         )
+            send_log_data(
+                sensor_id, 'tot_a', tot_a_value, dancers, locations, axes
+            )
+            send_log_dataa(
+                sensor_id, 'gyr', gyr_value, dancers, locations, axes
+            )
+            send_log_data(
+                sensor_id, 'rot', rot_value, dancers, locations, axes
+            )
+            send_log_dataa(
+                sensor_id, 'mag', mag_value, dancers, locations, axes
+            )
             sensor.send_log_data(
-                sensor_id, 'ori', euler_value, dancers, locations
+                sensor_id, 'ori', euler_value, dancers, locations, axes
             )
             
-def send_log_data(sensor_id, data_type, value, dancers, locations):
+def send_log_data(sensor_id, data_type, value, dancers, locations, axes):
     """send_log_data sends sensor data from a logfile to the dashboard
     plots.
     """    
@@ -297,13 +307,13 @@ def send_log_data(sensor_id, data_type, value, dancers, locations):
     # Set xyz coordinate data to their plots.
     if data_type in ['acc', 'gyr', 'mag']:
         for i, val in enumerate(value):
-            dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}'].append(val)
-            cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}']) - 500
+            dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}'].append(val)
+            cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}']) - 500
             if  cutoff > 0:
-                del dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}'][0]
+                del dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}'][0]
             dpg.configure_item(
-                f'{data_type}{k}_{s}{self.axes[i]}',
-                y=dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}']
+                f'{data_type}{k}_{s}{axes[i]}',
+                y=dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}']
             )
     # Set Euler angles data to its plot.
     elif data_type == 'ori':
