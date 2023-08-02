@@ -290,10 +290,10 @@ def plot_log(file_path, dancers, axes):
             send_log_data(
                 sensor_id, 'rot', rot_value, dancers, locations, axes
             )
-            send_log_dataa(
+            send_log_data(
                 sensor_id, 'mag', mag_value, dancers, locations, axes
             )
-            sensor.send_log_data(
+            send_log_data(
                 sensor_id, 'ori', euler_value, dancers, locations, axes
             )
             
