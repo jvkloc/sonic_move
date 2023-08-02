@@ -278,13 +278,13 @@ def plot_log(file_path, dancers, axes):
             mag_value = [float(val) for val in mag_value]
             euler_value = line.split(': ')[12:15]
             euler_value = [float(val) for val in euler_value]
-            send_log_data(s
-                          ensor_id, 'acc', acc_value, dancers, locations, axes
+            send_log_data(
+                sensor_id, 'acc', acc_value, dancers, locations, axes
                          )
             send_log_data(
                 sensor_id, 'tot_a', tot_a_value, dancers, locations, axes
             )
-            send_log_dataa(
+            send_log_data(
                 sensor_id, 'gyr', gyr_value, dancers, locations, axes
             )
             send_log_data(
