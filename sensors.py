@@ -14,6 +14,10 @@ def dancers(number_of_dancers=3, number_of_sensors=3):
         Number of dancers. Default value is three.
     number_of_sensors : int
         Number of sensors per dancer. Default value is three.
+    Returns
+    -------
+    dancers: list
+        A list of dictionaries of dictionaries for sensor data of each dancer.
     """
     
     dancers = [
@@ -32,7 +36,7 @@ def dancers(number_of_dancers=3, number_of_sensors=3):
             for data in ['acc', 'gyr', 'mag']:
                 for axis in ['x', 'y', 'z']:
                     dancer[f'snsr_{i}'][f'{data}_{axis}'] = [0] * 500
-    return(dancers)
+    return dancers
 
 
 class Sensors:
