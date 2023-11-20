@@ -6,4 +6,4 @@ Xsens Device API Linux and Windows Python wheel files with installation instruct
 
 Sonic Move project: https://uefconnect.uef.fi/en/group/sonic-move-creative-and-expressive-sonification-of-human-movement/
 
-Minimi: https://minimi.fi/ and Biodata Sonata: https://minimi.fi/ohjelmisto/biodatasonaatti-biodata-sonata/
+Minimi and Biodata Sonata: https://minimi.fi/pages/page/biodata-sonata-blog/
