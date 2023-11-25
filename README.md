@@ -8,4 +8,4 @@ Sonic Move project: https://uefconnect.uef.fi/en/group/sonic-move-creative-and-e
 
 Minimi and Biodata Sonata: https://minimi.fi/pages/page/biodata-sonata-blog/
 
-Yle article: https://yle.fi/a/74-20060177 (Finland's national public broadcasting company)
+Ylen artikkeli: https://yle.fi/a/74-20060177 (Finland's national public broadcasting company)
