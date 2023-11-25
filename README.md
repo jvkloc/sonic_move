@@ -5,5 +5,7 @@ If you need to change one or more sensors, you can do it by editing `sensors.py`
 Xsens Device API Linux and Windows Python wheel files with installation instructions are in the `wheels` folder.
 
 Sonic Move project: https://uefconnect.uef.fi/en/group/sonic-move-creative-and-expressive-sonification-of-human-movement/
+
 Minimi and Biodata Sonata: https://minimi.fi/pages/page/biodata-sonata-blog/
+
 Yle article: https://yle.fi/a/74-20060177 (Finland's national public broadcasting company)
