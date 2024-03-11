@@ -6,7 +6,7 @@ For example
 (MTSDK 2022.0.0 wheel for Python 3.9 on Linux)
 or
 `pip install xsensdeviceapi-2022.0.0-cp39-none-win_amd64.whl`
-(MTSDK 2022.0.0 wheel for Python 3.9 on Windows)
+(MTSDK 2022.0.0 wheel for Python 3.9 on Windows).
 
 ------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ In case your Python IDE is unable to find the xsensdeviceapi module or if the
 auto-completion does not work, try using<br>
 `import xsensdeviceapi.xsensdeviceapi_py<Python version>_64 as xda`
 instead of
-`import xsensdeviceapi as xda`
+`import xsensdeviceapi as xda`.
 
 Example for Python 3.9:
-`import xsensdeviceapi.xsensdeviceapi_py39_64 as xda`
+`import xsensdeviceapi.xsensdeviceapi_py39_64 as xda`.
