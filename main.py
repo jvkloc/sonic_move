@@ -1,20 +1,26 @@
-# Sonic Move Biodata Sonata main script.
-import sys
-import logging
+"""
+Jonne Klockars 2023
+HUMEA Lab
+
+Sonic Move Biodata Sonata main function.
+"""
+
 import argparse
+import logging
 from pathlib import Path
+import sys
 
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
 # https://osc4py3.readthedocs.io/en/latest/
-from osc4py3.as_eventloop import * 
 from osc4py3 import oscbuildparse
+from osc4py3.as_eventloop import * 
 
 import dashboard as db
 
 
 def osc(server_ip, server_port, client_ip, client_port):
-   """osc function sets up Open Sound Control messaging between a server
+   """Sets up Open Sound Control messaging between a server
    and a client.
    Parameters
    --------------
@@ -43,7 +49,7 @@ def osc_handler(acc, tot_acc, gyr, rot, mag, ori, mtw2_id):
 
                                                     
 def main():
-   """Sonic Move Biodata sonata main script. 
+   """
    Arguments
    ---------
    server_ip : str
@@ -90,12 +96,12 @@ def main():
    try:          
       osc(args.server_ip, args.server_port, args.client_ip, args.client_port)
    except Exception as e:
-      print(f'{e}. Open Sound Control setup failed. Aborting')
+      print(f'{e}./n Open Sound Control setup failed. Aborting')
       sys.exit(1)
    try:
       dashboard = db.Dashboard(args.device, Path(args.path))   
    except Exception as e:
-      print(f'{e}. Dashboard setup failed. Aborting.')
+      print(f'{e}./n Dashboard setup failed. Aborting.')
       sys.exit(1)
    dpg.setup_dearpygui()
    dpg.maximize_viewport()
