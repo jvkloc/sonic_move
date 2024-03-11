@@ -1,29 +1,33 @@
-# A class for an Xsens main device and attached sensors.
+"""
+Jonne Klockars 2023
+HUMEA Lab
+
+XdaDevice class for Xsens Dongle or Xsens Station for handling live
+data recording.
+"""
+
+from datetime import datetime
+from io import StringIO
+from math import sqrt
+from pathlib import Path
 import sys
 import time
-from math import sqrt
-from io import StringIO
-from pathlib import Path
 from time import time, sleep
-from datetime import datetime
 
-# Xsens Device API documentation provided with SDK download:
-# https://www.movella.com/support/software-documentation
-import xsensdeviceapi as xda
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
 # https://osc4py3.readthedocs.io/en/latest/
-from osc4py3.as_eventloop import * 
 from osc4py3 import oscbuildparse
+from osc4py3.as_eventloop import * 
+# https://www.movella.com/support/software-documentation
+import xsensdeviceapi as xda
 
 import sensors as ss
 import xda_callback as xc
 
 
 class XdaDevice():
-    """XdaDevice class for Xsens Dongle or Xsens Station. Class
-    objects contain all the necessary attributes for handling live
-    data recording.
+    """
     Methods
     ----------
     __init__
@@ -36,7 +40,7 @@ class XdaDevice():
     
     
     def __init__(self, main_device, log_path, threshold=30):
-        """Initialises an XdaDevice class object.
+        """
         Parameters
         --------------
         main_device : str
@@ -84,8 +88,8 @@ class XdaDevice():
         self.port = None
         self.device = None
         self.callback = None
-        self.channel= 11 # 11 for Biodata Sonate
-        self.update_rate = 100 # 100 for Biodata Sonate
+        self.channel= 11 # 11 for Biodata Sonata
+        self.update_rate = 100 # 100 for Biodata Sonata
         self.sensors = ss.Sensors()
         self.log_path = log_path
         if main_device == 'dongle':
@@ -97,11 +101,9 @@ class XdaDevice():
         self.recording = False
         self.acc_threshold = threshold
         
-        
     def create_control_object(self):
-        """create_control_object creates an XsControl object for
-        the main device and prints out the Xsens Device API
-        version if successful.
+        """Creates an XsControl object for the main device and prints 
+        the Xsens Device API version if successful.
         """
         
         dpg.set_value(
@@ -122,13 +124,11 @@ class XdaDevice():
                 f'Xsens Device API version: {xdaVersion.toXsString()}\n'
             )
 
-    
     def open_device(self):
-        """open_device finds the main device, opens the port it is
-        connected to, sets the device to the XsControl object and
-        sets a callback handler to it as well as sets the device to
-        self.device while printing information about the steps
-        to terminal and the dashboard.
+        """Finds the main device, opens the port it is connected to, 
+        sets the device to the XsControl object and sets a callback 
+        handler to it as well as sets the device to self.device while 
+        printing information about the steps to terminal and the dashboard.
         """
         
         dpg.set_value(
@@ -234,14 +234,12 @@ class XdaDevice():
             print('Callback handler setup failed. Aborting')
             sys.exit(1)
 
-    
     def configure_device(self):
-        """configure_device sets the device to configuration mode,
-        enables device radio, sets device live data recording
-        options and counts the connected sensors as well as sets
-        the sensor IDs to the dashboard sensor status panel, while
-        printing information about all the steps to the dashboard
-        and terminal.
+        """Sets the device to configuration mode, enables device radio, 
+        sets device live data recording options and counts the connected 
+        sensors as well as sets the sensor ids to the dashboard sensor 
+        status panel, while printing information about all the steps to 
+        the dashboard and terminal.
         """
         
         try:
@@ -334,17 +332,14 @@ class XdaDevice():
             self.device.disableRadio()
             sys.exit(1)        
 
-    
     def go_to_recording_mode(self):
-        """go_to_recording_mode sets the device and connected
-        sensors to measurement mode, confirms that the sensors
-        are in measurement mode and creates an mtb log file for
-        MTManager. XDA library function startRecording() does not
-        work without an mtb log file. However, the mtb log file
-        remains empty of data, unless by some miracle it works on
-        your machine. Finally, go_to_recording_mode attempts to
-        start recording with the main device. Information about
-        all the steps is printed to the dashboard and terminal.
+        """Sets the device and connected sensors to measurement mode, confirms 
+        that the sensors are in measurement mode and creates an mtb log file 
+        for MTManager. XDA library function startRecording() does not work 
+        without an mtb log file. However, the mtb log file remains empty of data, 
+        unless by some miracle it works on your machine. Finally, 
+        go_to_recording_mode attempts to start recording with the main device. 
+        Information about all the steps is printed to the dashboard and terminal.
         """
         
         try:
@@ -424,13 +419,11 @@ class XdaDevice():
         )
         print('Use the "Recording on/off" button to stop\n')
 
-    
     def recording_loop(self, timeout=0.2):
-        """recording_loop takes care of live data recording and
-        sending it to dashboard plots as well as to Open Sound
-        Control environment. It also creates a txt log file and
-        checks status of the sensors connected to the main
-        device. The function prints information about all the
+        """Takes care of live data recording and sending it to dashboard 
+        plots as well as to Open Sound Control environment. It also 
+        creates a txt log file and checks status of the sensors connected 
+        to the main device. The function prints information about all the
         steps to the dashboard and terminal.
         Parameters
         --------------
@@ -647,10 +640,9 @@ class XdaDevice():
             print(f'{e}. Aborting')
             self.device.disableRadio()
             sys.exit(1)
-        # Succesful exit.
+        # A succesful exit.
         dpg.set_value(
             'program_status', 'Successful exit. Ready for restart\n\n'
             f'{dpg.get_value("program_status")}'
         )
         print('Successful exit. Ready for restart')
-    
