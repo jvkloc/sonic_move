@@ -11,7 +11,7 @@ or
 ------------------------------------------------------------------------------------
 
 In case your Python IDE is unable to find the xsensdeviceapi module or if the
-auto-completion does not work, try using
+auto-completion does not work, try using<br>
 `import xsensdeviceapi.xsensdeviceapi_py<Python version>_64 as xda`
 instead of
 `import xsensdeviceapi as xda`
