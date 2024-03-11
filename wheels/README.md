@@ -16,5 +16,5 @@ auto-completion does not work, try using<br>
 instead of
 `import xsensdeviceapi as xda`.
 
-Example for Python 3.9:
+An example for Python 3.9:
 `import xsensdeviceapi.xsensdeviceapi_py39_64 as xda`.
