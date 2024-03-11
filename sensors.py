@@ -1,13 +1,17 @@
-# A class for Xsens sensors.
-from math import floor
+"""
+Jonne Klockars 2023
+HUMEA Lab
 
+Sensors class handles sensors to be used with Sonic Move Biodata Sonata.
+"""
+
+from math import floor
 # https://dearpygui.readthedocs.io/en/latest/
 import dearpygui.dearpygui as dpg
 
 
 def dancers(number_of_dancers=3, number_of_sensors=3):
-    """dancers creates a list of dictionary of dictionaries for 
-    sensor data of each Biodata Sonata dancer.
+    """
     Parameters
     --------------
     number_of_dancers : int
@@ -40,9 +44,7 @@ def dancers(number_of_dancers=3, number_of_sensors=3):
 
 
 class Sensors:
-    """Sensors class handles sensors to be used with Sonic Move Biodata
-    Sonata. Variable and function naming is self explanatory, a few 
-    comments have been added for clarity.
+    """
     Methods
     ----------
     __init__
@@ -53,9 +55,8 @@ class Sensors:
     plot_log
     """
 
-    
     def __init__(self):
-        """Initialises a Sensors object.
+        """
         Parameters
         --------------
         axes : list
@@ -79,8 +80,8 @@ class Sensors:
         
         self.axes  = ['x', 'y', 'z']
         self.sensors = None
-        # locations[1]: dancers 1,2 and 3.
-        # locations[2]: 1 for left, 2 for right, 3 for torso.
+        # locations[1][1]: dancers 1,2 and 3.
+        # locations[1][2]: 1 for left, 2 for right, 3 for torso.
         self.locations = {
             '00B42D46' : ['left', 1, 1], # dancer 1 left etc.
             '00B42D4F' : ['right', 1, 2],
@@ -108,11 +109,10 @@ class Sensors:
             for _ in range(9)
         ]
         self.dancers = dancers()
-
     
     def set_ids(self):
-        """set_ids sets sensor IDs to the dashboard and to
-        self.minmax dictionary list used for data scaling.
+        """Sets sensor IDs to the dashboard and to self.minmax dictionary 
+        list used for data scaling.
         """
         
         for i, sensor in enumerate(self.sensors):
@@ -126,9 +126,8 @@ class Sensors:
                     label=f'{sensor_id} {self.labels[j][1]}'
                 )
 
-    
     def scale_data(self, sensor_id, data_type, value):
-        """scale_data scales sensor data to the unit interval."""
+        """Scales sensor data to the unit interval."""
         
         scaled_data = []
         sensor = [
@@ -141,21 +140,18 @@ class Sensors:
                 sensor[f'{data_type}_min'][i] = val
             elif val > maximum:
                 sensor[f'{data_type}_max'][i] = val
-            # Cast numpy.float64 value to Python's native float.
+            # numpy.float64 value to Python's native float.
             scaled_data.append(
                 float((val - minimum) / (maximum - minimum))
             )
         return scaled_data
 
-    
     def send_data(self, sensor_id, data_type, value):
-        """send_data sends sensor data and IDS to the dashboard
-        plots.
-        """
+        """Sends sensor data and IDS to the dashboard plots."""
         
         s = self.locations[sensor_id][2]
         k = self.locations[sensor_id][1] - 1
-        # Set xyz coordinate data to their plots.
+        # x, y, and z coordinates data to their plots.
         if data_type in ['acc', 'gyr', 'mag']:
             for i, val in enumerate(value):
                 self.dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}'].append(val)
@@ -166,7 +162,7 @@ class Sensors:
                     f'{data_type}{k}_{s}{self.axes[i]}',
                     y=self.dancers[k][f'snsr_{s}'][f'{data_type}_{self.axes[i]}']
                 )
-        # Set Euler angles data to its plot.
+        # Euler angles data to its plot.
         elif data_type == 'ori':
             self.dancers[k][f'snsr_{s}'][f'{data_type}_p'].append(value[0])
             self.dancers[k][f'snsr_{s}'][f'{data_type}_r'].append(value[1])
@@ -179,7 +175,7 @@ class Sensors:
                     f'{data_type}{k}_{s}{angle}',
                     y=self.dancers[k][f'snsr_{s}'][f'{data_type}_{angle}']
                 )
-        # Set rate of turn data to its plot.
+        # Rate of turn data to its plot.
         elif data_type == 'rot':
             self.dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
             cutoff = len(self.dancers[k][f'snsr_{s}'][f'{data_type}']) - 500
@@ -189,7 +185,7 @@ class Sensors:
                 f'{data_type}{k}_{s}',
                 y=self.dancers[k][f'snsr_{s}'][f'{data_type}']
             )
-        # Set total acceleration and binary value data to their plot.
+        # Total acceleration and binary value data to their plot.
         elif data_type == 'tot_a':
             self.dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
             self.dancers[k][f'snsr_{s}'][f'b_{data_type}'].append(value[1])
@@ -214,11 +210,8 @@ class Sensors:
                    y=self.dancers.dancers[k][f'snsr_{s}'][f'b_{data_type}']
                 )
 
-    
     def status(self, ids=False, finished=False):
-        """status sets and checks the measurement status of
-        the sensors.
-        """
+        """Sets and checks the measurement status of the sensors."""
         
         for i, sensor in enumerate(self.sensors):
             if ids:
@@ -230,11 +223,9 @@ class Sensors:
             else:
                 dpg.set_value(f'sensor_{i}', 'Measuring')
 
-
 def plot_log(file_path, dancers, axes):
-    """plot_log plots a txt log file from the dashboard file dialog.
-    One line in the txt log file written by XdaDevice class
-    method recording_loop contains the data from a single
+    """Plots a txt log file. One line in the txt log file written by 
+    XdaDevice class method recording_loop() contains the data from a single
     data packet sent by a sensor.
     """
     
@@ -302,13 +293,11 @@ def plot_log(file_path, dancers, axes):
             )
             
 def send_log_data(sensor_id, data_type, value, dancers, locations, axes):
-    """send_log_data sends sensor data from a logfile to the dashboard
-    plots.
-    """    
+    """Sends sensor data from a logfile to the dashboard plots."""    
     
     s = locations[sensor_id][2]
     k = locations[sensor_id][1] - 1    
-    # Set xyz coordinate data to their plots.
+    # x, y, and z coordinate data to their plots.
     if data_type in ['acc', 'gyr', 'mag']:
         for i, val in enumerate(value):
             dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}'].append(val)
@@ -319,7 +308,7 @@ def send_log_data(sensor_id, data_type, value, dancers, locations, axes):
                 f'{data_type}{k}_{s}{axes[i]}',
                 y=dancers[k][f'snsr_{s}'][f'{data_type}_{axes[i]}']
             )
-    # Set Euler angles data to its plot.
+    # Euler angles data to its plot.
     elif data_type == 'ori':
         dancers[k][f'snsr_{s}'][f'{data_type}_p'].append(value[0])
         dancers[k][f'snsr_{s}'][f'{data_type}_r'].append(value[1])
@@ -332,7 +321,7 @@ def send_log_data(sensor_id, data_type, value, dancers, locations, axes):
                 f'{data_type}{k}_{s}{angle}',
                 y=dancers[k][f'snsr_{s}'][f'{data_type}_{angle}']
             )
-    # Set rate of turn data to its plot.
+    # Rate of turn data to its plot.
     elif data_type == 'rot':
         dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
         cutoff = len(dancers[k][f'snsr_{s}'][f'{data_type}']) - 500
@@ -342,7 +331,7 @@ def send_log_data(sensor_id, data_type, value, dancers, locations, axes):
             f'{data_type}{k}_{s}',
             y=dancers[k][f'snsr_{s}'][f'{data_type}']
         )
-    # Set total acceleration and binary value data to their plot.
+    # Total acceleration and binary value data to their plot.
     elif data_type == 'tot_a':
         dancers[k][f'snsr_{s}'][f'{data_type}'].append(value[0])
         dancers[k][f'snsr_{s}'][f'b_{data_type}'].append(value[1])
