@@ -1,13 +1,17 @@
-# A Class for handling live data from sensors.
+""" 
+Class for handling incoming data from sensors. XdaCallback inherits 
+the Xsens Device API XsCallback class. Xsens Device API 
+documentation provided with the SDK download:
+https://www.movella.com/support/software-documentation
+"""
+
 from threading import Lock
-# Xsens Device API documentation provided with SDK download:
-# https://www.movella.com/support/software-documentation
+
 import xsensdeviceapi as xda
 
 
 class XdaCallback(xda.XsCallback):
-    """Class for handling incoming data from sensors. XdaCallback
-    inherits the Xsens Device API XsCallback class.
+    """
     Methods
     ----------
     __init__
@@ -16,7 +20,6 @@ class XdaCallback(xda.XsCallback):
     onLiveDataAvailable
     """
 
-    
     def __init__(self, max_buffer_size = 5):
         """Initialise XdaCallback object.
         Parameters
@@ -38,27 +41,28 @@ class XdaCallback(xda.XsCallback):
         self.packet_buffer = []
         self.lock = Lock()
 
-    
     def packet_available(self):
+        """Returns a boolean indicating availability of packets 
+        in the buffer.
+        """
         
         self.lock.acquire()
         available = len(self.packet_buffer) > 0
         self.lock.release()
         return available
 
-    
     def get_next_packet(self):
+        """Returns a packet by popping it from the buffer."""
         
         self.lock.acquire()
         if len(self.packet_buffer) <= 0:
             return None
         oldest_packet = xda.XsDataPacket(self.packet_buffer.pop(0))
         self.lock.release()
-        return oldest_packet  
-
+        return oldest_packet    
     
-    # Overriding Xsens Device API onLiveDataAvailable method.
     def onLiveDataAvailable(self, device, packet):
+        """Overrides Xsens Device API onLiveDataAvailable method."""
         
         self.lock.acquire()
         if packet != 0:
@@ -66,4 +70,3 @@ class XdaCallback(xda.XsCallback):
                 self.packet_buffer.pop()
             self.packet_buffer.append(xda.XsDataPacket(packet))
             self.lock.release()
-            
