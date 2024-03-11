@@ -1,17 +1,17 @@
-""" 
-Class for handling incoming data from sensors. XdaCallback inherits 
-the Xsens Device API XsCallback class. Xsens Device API 
-documentation provided with the SDK download:
-https://www.movella.com/support/software-documentation
+"""
+Jonne Klockars 2023
+HUMEA Lab
+
+Class for handling incoming data from sensors.
 """
 
 from threading import Lock
-
+# https://www.movella.com/support/software-documentation
 import xsensdeviceapi as xda
 
 
 class XdaCallback(xda.XsCallback):
-    """
+    """XdaCallback inherits the Xsens Device API XsCallback class.
     Methods
     ----------
     __init__
