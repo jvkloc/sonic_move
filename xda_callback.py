@@ -11,30 +11,11 @@ import xsensdeviceapi as xda
 
 
 class XdaCallback(xda.XsCallback):
-    """XdaCallback inherits the Xsens Device API XsCallback class.
-    Methods
-    ----------
-    __init__
-    packet_available
-    get_next_packet
-    onLiveDataAvailable
-    """
 
     def __init__(self, max_buffer_size = 5):
-        """Initialise XdaCallback object.
-        Parameters
-        --------------
-        max_buffer_size : int
-            The maximum length of data packet list. Default is 5.
-        Attributes
-        ------------
-        max_buffered_packets : int
-            Receives the parameter max_buffer_size
-        packet_buffer : list
-            A list for data packets waiting to be processed.
-        lock : Lock
-            A Lock object for packet handling.
-         """        
+        """max_buffer_size defines the maximum length 
+        of the data packet list. Default is 5.
+        """        
         
         xda.XsCallback.__init__(self)
         self.max_buffered_packets = max_buffer_size
