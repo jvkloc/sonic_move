@@ -11,17 +11,8 @@ import dearpygui.dearpygui as dpg
 
 
 def dancers(number_of_dancers=3, number_of_sensors=3):
-    """
-    Parameters
-    --------------
-    number_of_dancers : int
-        Number of dancers. Default value is three.
-    number_of_sensors : int
-        Number of sensors per dancer. Default value is three.
-    Returns
-    -------
-    dancers: list
-        A list of dictionaries of dictionaries for sensor data of each dancer.
+    """Returns a list of dictionaries of dictionaries for 
+    sensor data of each dancer.
     """
     
     dancers = [
@@ -44,44 +35,18 @@ def dancers(number_of_dancers=3, number_of_sensors=3):
 
 
 class Sensors:
-    """
-    Methods
-    ----------
-    __init__
-    set_ids
-    scale_data
-    send_data
-    status
-    plot_log
-    """
 
     def __init__(self):
-        """
-        Parameters
-        --------------
-        axes : list
-            A list of characters for the used axes. Default is 'x', 'y'
-            and 'z'.
-        sensors : list
-            XdaDevice instance method configure_device appends
-            a list of XsDevice pointers to sensors connected to the
-            main device.
-        locations : dict
-            Sensor IDs are the keys and locations are the values.
-        labels: list
-            List of tuples containing sensor data labels.
-        minmax : list
-            List of dictionaries with sensor ID and min/max values
-            for data scaling.
-        dancers : list
-            List of dictionaries of dictionaries for each dancers'
-            sensor data.
+        """XdaDevice instance method configure_device() appends
+        a list of XsDevice pointers to sensors connected to the
+        main device to Sensors attribute 'sensors'.
         """
         
         self.axes  = ['x', 'y', 'z']
         self.sensors = None
-        # locations[1][1]: dancers 1,2 and 3.
-        # locations[1][2]: 1 for left, 2 for right, 3 for torso.
+        # locations[id_key][0]: sensor position on the dancer.
+        # locations[id_key][1]: dancers 1,2 and 3.
+        # locations[id_key][2]: 1 for left, 2 for right, 3 for torso.
         self.locations = {
             '00B42D46' : ['left', 1, 1], # dancer 1 left etc.
             '00B42D4F' : ['right', 1, 2],
@@ -111,7 +76,7 @@ class Sensors:
         self.dancers = dancers()
     
     def set_ids(self):
-        """Sets sensor IDs to the dashboard and to self.minmax dictionary 
+        """Sets sensor ids to the dashboard and to self.minmax dictionary 
         list used for data scaling.
         """
         
@@ -147,7 +112,7 @@ class Sensors:
         return scaled_data
 
     def send_data(self, sensor_id, data_type, value):
-        """Sends sensor data and IDS to the dashboard plots."""
+        """Sends sensor data and ids to the dashboard plots."""
         
         s = self.locations[sensor_id][2]
         k = self.locations[sensor_id][1] - 1
@@ -228,9 +193,10 @@ def plot_log(file_path, dancers, axes):
     XdaDevice class method recording_loop() contains the data from a single
     data packet sent by a sensor.
     """
-    
-    # locations[1]: dancers 1,2 and 3.
-    # locations[2]: 1 for left, 2 for right, 3 for torso.
+
+    # locations[id_key][0]: sensor position on the dancer.
+    # locations[id_key][1]: dancers 1,2 and 3.
+    # locations[id_key][2]: 1 for left, 2 for right, 3 for torso.
     locations = {
         '00B42D46' : ['left', 1, 1], # dancer 1 left etc.
         '00B42D4F' : ['right', 1, 2],
