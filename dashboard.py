@@ -16,16 +16,6 @@ import xda_device as xd
 
 
 class Dashboard:
-    """
-    Methods
-    ----------
-    __init__
-    set_threshold
-    show_file_dialog
-    file_dialog_callback
-    file_dialog_cancel
-    setup
-    """
 
     def __init__(self, device, path):
         """
