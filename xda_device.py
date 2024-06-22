@@ -26,18 +26,7 @@ import sensors as ss
 import xda_callback as xc
 
 
-class XdaDevice():
-    """
-    Methods
-    ----------
-    __init__
-    create_control_object
-    open_device
-    configure_device
-    go_to_recording_mode
-    recording_loop
-    """
-    
+class XdaDevice():    
     
     def __init__(self, main_device, log_path, threshold=30):
         """
@@ -52,12 +41,12 @@ class XdaDevice():
         Attributes
         ------------
         control : XsControl pointer
-            create_control_object sets a poitner to an XsControl
+            create_control_object() sets a poitner to an XsControl
             object.
         port : XsPortInfoArray
-            open_device mehtod sets an XsPortInfoArray object.
+            open_device() sets an XsPortInfoArray object.
         main_device : XsDevice pointer
-            open_device sets a pointer to an XsDevice object.
+            open_device() sets a pointer to an XsDevice object.
         callback : XsCallback
             XsCallback object for handling incoming sensor data.
         channel : int
@@ -66,17 +55,17 @@ class XdaDevice():
         update_rate : int
             Hardcoded 100 for Biodata Sonata. Recommended
             wireless update rates are
-            60Hz for 11 - 20 MTw sensors
-            80Hz for     10    MTw sensors
-            100Hz for   6 - 9   MTw sensors and
-            120Hz for   1 - 5   MTw sensors.
-        sensors : Sensor
-            Sensor object for using Sensor class send_data
+            60Hz for 11-20 MTw sensors
+            80Hz for 10  MTw sensors
+            100Hz for 6-9 MTw sensors and
+            120Hz for 1-5 MTw sensors.
+        sensors : Sensors
+            Sensors object for using Sensors class send_data
             and status functions.
         log_path : str
             File path for saving log files.
         serial : str
-            main_device parameter defines serial: 'dongle' sets serial to
+            main_device() parameter defines serial: 'dongle' sets serial to
             'AW-DNG2' and 'station' sets serial to ' AW-A2'.
         recording : Bool
             A Boolean representing the recording status of the device.
@@ -107,7 +96,7 @@ class XdaDevice():
         """
         
         dpg.set_value(
-        'program_status', 'Creating an XsControl object...\n'
+            'program_status', 'Creating an XsControl object...\n'
         )
         print('Creating an XsControl object... ')
         self.control = xda.XsControl()
@@ -337,9 +326,9 @@ class XdaDevice():
         that the sensors are in measurement mode and creates an mtb log file 
         for MTManager. XDA library function startRecording() does not work 
         without an mtb log file. However, the mtb log file remains empty of data, 
-        unless by some miracle it works on your machine. Finally, 
-        go_to_recording_mode attempts to start recording with the main device. 
-        Information about all the steps is printed to the dashboard and terminal.
+        unless by some miracle it works on your machine. Finally, the method
+        attempts to start recording with the main device. Information about all 
+        the steps is printed to the dashboard and terminal.
         """
         
         try:
@@ -423,8 +412,8 @@ class XdaDevice():
         """Takes care of live data recording and sending it to dashboard 
         plots as well as to Open Sound Control environment. It also 
         creates a txt log file and checks status of the sensors connected 
-        to the main device. The function prints information about all the
-        steps to the dashboard and terminal.
+        to the main device. Prints information about all the steps to the 
+        dashboard and terminal.
         Parameters
         --------------
         timeout : float
