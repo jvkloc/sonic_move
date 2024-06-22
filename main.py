@@ -22,16 +22,6 @@ import dashboard as db
 def osc(server_ip, server_port, client_ip, client_port):
    """Sets up Open Sound Control messaging between a server
    and a client.
-   Parameters
-   --------------
-   server_ip :
-       IP address of Open Sound Control server.
-   server_port :
-       Open Sound Control port.
-   client_ip :
-       IP address of Open Sound Control client.
-   client_port :
-       Open Sound Control client port.
    """
    
    logging.basicConfig(
@@ -96,7 +86,7 @@ def main():
    try:          
       osc(args.server_ip, args.server_port, args.client_ip, args.client_port)
    except Exception as e:
-      print(f'{e}./n Open Sound Control setup failed. Aborting')
+      print(f'{e}./n Open Sound Control setup failed. Aborting.')
       sys.exit(1)
    try:
       dashboard = db.Dashboard(args.device, Path(args.path))   
